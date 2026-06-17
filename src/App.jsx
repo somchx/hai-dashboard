@@ -43,7 +43,7 @@ function App() {
           <Route path="procurement" element={<Procurement />} />
           <Route path="accreditation" element={<Accreditation />} />
           <Route path="policy" element={<Policy />} />
-          <Route path="reports" element={<Reports />} />
+          <Route path="reports" element={<Navigate to="/self-service" replace />} />
           <Route path="alerts" element={<Alerts />} />
           <Route path="admin" element={<Admin />} />
           <Route path="settings" element={<Settings />} />

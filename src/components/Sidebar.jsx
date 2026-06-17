@@ -5,8 +5,6 @@ import {
   DollarSign,
   ShoppingCart,
   Award,
-  FileText,
-  BarChart3,
   Bell,
   Users,
   Settings,
@@ -49,16 +47,10 @@ const navItems = [
     ]
   },
   {
-    group: 'เครื่องมือ',
-    items: [
-      { path: '/reports', icon: BarChart3, label: 'รายงาน', labelEn: 'Reports' },
-      { path: '/alerts', icon: Bell, label: 'การแจ้งเตือน', labelEn: 'Alerts' },
-    ]
-  },
-  {
     group: 'ระบบ',
     items: [
       { path: '/admin', icon: Users, label: 'ผู้ใช้งาน', labelEn: 'Users' },
+      { path: '/alerts', icon: Bell, label: 'การแจ้งเตือน', labelEn: 'Alerts' },
       { path: '/settings', icon: Settings, label: 'ตั้งค่า', labelEn: 'Settings' },
     ]
   }

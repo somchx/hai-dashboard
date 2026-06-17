@@ -31,7 +31,17 @@ import {
   RefreshCw,
   Settings,
   Save,
+  Search,
+  Share2,
+  MessageSquare,
+  Send,
+  Calendar,
+  DollarSign,
+  ShoppingCart,
+  Award,
+  Shield,
 } from "lucide-react";
+import { reports, scheduledReports, mockComments } from "../data/mockReports";
 
 // ─── Mock Data Sets ───────────────────────────────────────────────────────────
 
@@ -260,6 +270,19 @@ const SAVED_REPORTS = [
 ];
 
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
+
+const categoryColors = {
+  'การเงิน': 'bg-blue-100 text-blue-700',
+  'พัสดุ': 'bg-teal-100 text-teal-700',
+  'การรับรอง': 'bg-green-100 text-green-700',
+  'นโยบาย': 'bg-purple-100 text-purple-700',
+};
+const categoryIcons = {
+  'การเงิน': DollarSign,
+  'พัสดุ': ShoppingCart,
+  'การรับรอง': Award,
+  'นโยบาย': Shield,
+};
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -490,8 +513,38 @@ export default function SelfService() {
     );
   };
 
+  // Reports section state
+  const [reportSearch, setReportSearch] = useState('');
+  const [reportCategory, setReportCategory] = useState('ทั้งหมด');
+  const [commentReport, setCommentReport] = useState(null);
+  const [newComment, setNewComment] = useState('');
+  const [commentsByReport, setCommentsByReport] = useState(mockComments);
+
+  const reportCategories = ['ทั้งหมด', 'การเงิน', 'พัสดุ', 'การรับรอง', 'นโยบาย'];
+  const filteredReports = reports.filter(r =>
+    (reportCategory === 'ทั้งหมด' || r.category === reportCategory) &&
+    (reportSearch === '' || r.title.toLowerCase().includes(reportSearch.toLowerCase()))
+  );
+  const getComments = (id) => commentsByReport[id] || [];
+  const addComment = (reportId) => {
+    if (!newComment.trim()) return;
+    setCommentsByReport(prev => ({
+      ...prev,
+      [reportId]: [...(prev[reportId] || []), { id: Date.now(), author: 'นายแพทย์ สมชาย ใจดี', time: 'เมื่อสักครู่', text: newComment.trim() }]
+    }));
+    setNewComment('');
+  };
+
   return (
-    <div className="flex h-full gap-4 p-4 bg-gray-50 min-h-0">
+    <div className="flex flex-col gap-6">
+      {/* ─── Builder Section Header ───────────────────────────────────────── */}
+      <div className="px-4 pt-4">
+        <h1 className="text-xl font-bold text-gray-900">สร้างรายงาน</h1>
+        <p className="text-sm text-gray-500 mt-0.5">Self-Service Analytics — สร้างและจัดการรายงานด้วยตนเอง</p>
+      </div>
+
+      {/* ─── 3-Panel Builder ──────────────────────────────────────────────── */}
+      <div className="flex gap-4 px-4 min-h-[600px]">
       {/* ─── Left Panel: Filters ──────────────────────────────────────────── */}
       <aside className="w-[280px] flex-shrink-0 flex flex-col gap-4 overflow-y-auto">
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
@@ -874,6 +927,168 @@ export default function SelfService() {
           </div>
         </div>
       </aside>
+      </div>{/* end 3-panel */}
+
+      {/* ─── Reports Section ──────────────────────────────────────────────── */}
+      <div className="px-4 pb-6 space-y-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900">รายงานทั้งหมด</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Reports Management — {reports.length} รายงาน</p>
+          </div>
+        </div>
+
+        {/* Search + Filter */}
+        <div className="flex flex-wrap gap-3 items-center">
+          <div className="relative flex-1 min-w-[200px] max-w-md">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              value={reportSearch}
+              onChange={e => setReportSearch(e.target.value)}
+              placeholder="ค้นหารายงาน..."
+              className="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 focus:border-[#0D5C8F] shadow-sm"
+            />
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {reportCategories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setReportCategory(cat)}
+                className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                  reportCategory === cat
+                    ? 'bg-[#0D5C8F] text-white'
+                    : 'bg-white text-gray-600 border border-gray-200 hover:border-[#0D5C8F]/40'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Report Grid */}
+        <div>
+          <p className="text-xs text-gray-400 mb-3">แสดง {filteredReports.length} รายงาน</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            {filteredReports.map(report => {
+              const Icon = categoryIcons[report.category] || BarChart2;
+              const reportComments = getComments(report.id);
+              return (
+                <div key={report.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="p-2 bg-gray-50 rounded-lg">
+                        <Icon size={16} className="text-gray-500" />
+                      </div>
+                      <span className={`badge text-[10px] ${categoryColors[report.category] || 'bg-gray-100 text-gray-600'}`}>
+                        {report.category}
+                      </span>
+                    </div>
+                    <span className="badge bg-gray-100 text-gray-500 text-[10px]">{report.format}</span>
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-800 mb-2 leading-snug line-clamp-2">{report.title}</h3>
+                  <div className="flex items-center gap-1 text-[11px] text-gray-400 mb-3">
+                    <Clock size={11} />
+                    อัปเดต {report.lastUpdated}
+                  </div>
+                  <div className="flex items-center justify-between border-t border-gray-50 pt-3">
+                    <span className="text-xs text-gray-400">{report.views} ครั้ง</span>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => setCommentReport(commentReport === report.id ? null : report.id)}
+                        className="flex items-center gap-1 text-xs text-gray-400 hover:text-[#0D5C8F] transition-colors p-1.5 rounded-lg hover:bg-blue-50"
+                      >
+                        <MessageSquare size={13} />
+                        <span>{reportComments.length}</span>
+                      </button>
+                      <button className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-[#0D5C8F] transition-colors" title="แชร์">
+                        <Share2 size={13} />
+                      </button>
+                      <button className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-[#0D5C8F] transition-colors" title="ดาวน์โหลด">
+                        <Download size={13} />
+                      </button>
+                    </div>
+                  </div>
+                  {commentReport === report.id && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <div className="space-y-2.5 max-h-40 overflow-y-auto mb-3">
+                        {reportComments.length === 0 ? (
+                          <p className="text-xs text-gray-400 text-center py-2">ยังไม่มีความคิดเห็น</p>
+                        ) : (
+                          reportComments.map(c => (
+                            <div key={c.id} className="bg-gray-50 rounded-lg p-2.5">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-xs font-semibold text-gray-700">{c.author}</span>
+                                <span className="text-[10px] text-gray-400">{c.time}</span>
+                              </div>
+                              <p className="text-xs text-gray-600 leading-relaxed">{c.text}</p>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={newComment}
+                          onChange={e => setNewComment(e.target.value)}
+                          onKeyDown={e => e.key === 'Enter' && addComment(report.id)}
+                          placeholder="เขียนความคิดเห็น..."
+                          className="flex-1 text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20"
+                        />
+                        <button
+                          onClick={() => addComment(report.id)}
+                          className="p-2 bg-[#0D5C8F] text-white rounded-lg hover:bg-[#0a4a73] transition-colors"
+                        >
+                          <Send size={12} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Scheduled Reports */}
+        <div className="chart-card">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
+                <Calendar size={15} className="text-[#0D5C8F]" />
+                รายงานอัตโนมัติ
+              </h3>
+              <p className="text-xs text-gray-400 mt-0.5">ตั้งเวลาส่งรายงานอัตโนมัติ</p>
+            </div>
+            <button className="btn-primary text-xs">+ เพิ่มตารางรายงาน</button>
+          </div>
+          <div className="space-y-2">
+            {scheduledReports.map(sr => (
+              <div key={sr.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                <div className={`p-2 rounded-lg ${sr.status === 'ใช้งาน' ? 'bg-green-100' : 'bg-gray-200'}`}>
+                  <Clock size={14} className={sr.status === 'ใช้งาน' ? 'text-green-600' : 'text-gray-500'} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-800 truncate">{sr.title}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {sr.frequency} — ครั้งต่อไป: {sr.nextRun} — รับ: {sr.recipients.join(', ')}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="badge bg-blue-100 text-blue-700 text-[10px]">{sr.format}</span>
+                  <span className={`badge text-[10px] ${sr.status === 'ใช้งาน' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                    {sr.status}
+                  </span>
+                  <button className="text-xs text-gray-400 hover:text-red-500 transition-colors p-1">
+                    <X size={13} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
