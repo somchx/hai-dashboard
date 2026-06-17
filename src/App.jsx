@@ -11,6 +11,9 @@ import Reports from './pages/Reports'
 import Alerts from './pages/Alerts'
 import Admin from './pages/Admin'
 import Settings from './pages/Settings'
+import SelfService from './pages/SelfService'
+import DataPrep from './pages/DataPrep'
+import DataModeling from './pages/DataModeling'
 
 function ProtectedRoute({ children }) {
   const user = localStorage.getItem('hai_user')
@@ -44,6 +47,9 @@ function App() {
           <Route path="alerts" element={<Alerts />} />
           <Route path="admin" element={<Admin />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="self-service" element={<SelfService />} />
+          <Route path="data-prep" element={<DataPrep />} />
+          <Route path="data-modeling" element={<DataModeling />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

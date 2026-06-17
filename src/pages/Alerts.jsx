@@ -10,12 +10,12 @@ const initialAlerts = [
 ]
 
 const alertHistory = [
-  { id: 1, metric: 'คะแนน HA เฉลี่ย', value: 72.3, threshold: 75, triggered: '15/06/2567 10:23', channel: 'email', type: 'warning' },
-  { id: 2, metric: 'งบประมาณที่ใช้', value: 92.1, threshold: 90, triggered: '12/06/2567 09:15', channel: 'email', type: 'critical' },
-  { id: 3, metric: 'คะแนน HA เฉลี่ย', value: 73.8, threshold: 75, triggered: '10/06/2567 14:42', channel: 'email', type: 'warning' },
-  { id: 4, metric: 'โรงพยาบาลใบรับรองหมดอายุ', value: 12, threshold: 10, triggered: '08/06/2567 08:00', channel: 'email', type: 'info' },
-  { id: 5, metric: 'งบประมาณที่ใช้', value: 91.5, threshold: 90, triggered: '05/06/2567 15:30', channel: 'email', type: 'critical' },
-  { id: 6, metric: 'คำขอจัดซื้อค้าง', value: 215, threshold: 200, triggered: '03/06/2567 11:00', channel: 'sms', type: 'warning' },
+  { id: 1, metric: 'คะแนน HA เฉลี่ย', value: 72.3, threshold: 75, triggered: '15/06/2567 10:23', channel: 'email', type: 'warning', sentTo: 'admin@hai.go.th' },
+  { id: 2, metric: 'งบประมาณที่ใช้', value: 92.1, threshold: 90, triggered: '12/06/2567 09:15', channel: 'email', type: 'critical', sentTo: 'finance@hai.go.th' },
+  { id: 3, metric: 'คะแนน HA เฉลี่ย', value: 73.8, threshold: 75, triggered: '10/06/2567 14:42', channel: 'email', type: 'warning', sentTo: 'admin@hai.go.th' },
+  { id: 4, metric: 'โรงพยาบาลใบรับรองหมดอายุ', value: 12, threshold: 10, triggered: '08/06/2567 08:00', channel: 'email', type: 'info', sentTo: 'quality@hai.go.th' },
+  { id: 5, metric: 'งบประมาณที่ใช้', value: 91.5, threshold: 90, triggered: '05/06/2567 15:30', channel: 'email', type: 'critical', sentTo: 'finance@hai.go.th' },
+  { id: 6, metric: 'คำขอจัดซื้อค้าง', value: 215, threshold: 200, triggered: '03/06/2567 11:00', channel: 'sms', type: 'warning', sentTo: '+66-81-234-5678' },
 ]
 
 const metrics = [
@@ -26,6 +26,8 @@ const metrics = [
   'ผู้ใช้งานออนไลน์',
   'รายรับประจำเดือน',
   'อัตราส่วนรายจ่าย',
+  'Hospital Risk Score',
+  'Budget Utilization',
 ]
 
 const historyTypeStyle = {
@@ -34,10 +36,28 @@ const historyTypeStyle = {
   info: { icon: Info, cls: 'text-blue-600 bg-blue-50' },
 }
 
+const pinnedAlerts = [
+  {
+    id: 'pinned-1',
+    label: 'Hospital Risk Score > 80',
+    channels: 'Email',
+    channelColor: 'bg-blue-100 text-blue-700',
+    description: 'แจ้งเตือนเมื่อโรงพยาบาลมีคะแนนความเสี่ยงสูงกว่า 80 คะแนน',
+  },
+  {
+    id: 'pinned-2',
+    label: 'Budget Utilization > 85%',
+    channels: 'Email / LINE',
+    channelColor: 'bg-green-100 text-green-700',
+    description: 'แจ้งเตือนเมื่ออัตราการใช้งบประมาณเกิน 85% ของวงเงินที่ได้รับ',
+  },
+]
+
 export default function Alerts() {
   const [alerts, setAlerts] = useState(initialAlerts)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ metric: metrics[0], condition: '>', threshold: '', channel: 'email' })
+  const [builderForm, setBuilderForm] = useState({ metric: metrics[0], operator: '>', value: '', channel: 'email' })
 
   const toggleAlert = (id) => {
     setAlerts(prev => prev.map(a => a.id === id ? { ...a, active: !a.active } : a))
@@ -61,6 +81,13 @@ export default function Alerts() {
     setShowForm(false)
   }
 
+  const handleBuilderAdd = (e) => {
+    e.preventDefault()
+    if (!builderForm.value) return
+    alert(`เพิ่มเงื่อนไขแล้ว: ${builderForm.metric} ${builderForm.operator} ${builderForm.value} → ${builderForm.channel.toUpperCase()}`)
+    setBuilderForm({ metric: metrics[0], operator: '>', value: '', channel: 'email' })
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -75,6 +102,60 @@ export default function Alerts() {
           <Plus size={14} />
           สร้างการแจ้งเตือน
         </button>
+      </div>
+
+      {/* Alert Condition Builder */}
+      <div className="chart-card border border-[#0D5C8F]/15">
+        <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
+          <Bell size={15} className="text-[#0D5C8F]" />
+          เงื่อนไขการแจ้งเตือน
+          <span className="text-xs font-normal text-gray-400 ml-1">Alert Condition Builder</span>
+        </h3>
+        <form onSubmit={handleBuilderAdd} className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-gray-600 font-medium whitespace-nowrap">เมื่อ</span>
+          <select
+            value={builderForm.metric}
+            onChange={e => setBuilderForm({ ...builderForm, metric: e.target.value })}
+            className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 bg-white"
+          >
+            {metrics.map(m => <option key={m}>{m}</option>)}
+          </select>
+          <select
+            value={builderForm.operator}
+            onChange={e => setBuilderForm({ ...builderForm, operator: e.target.value })}
+            className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 bg-white font-mono w-20"
+          >
+            <option value=">">{'>'}</option>
+            <option value="<">{'<'}</option>
+            <option value="=">{'='}</option>
+            <option value=">=">{'>='}</option>
+            <option value="<=">{'<='}</option>
+          </select>
+          <input
+            type="number"
+            value={builderForm.value}
+            onChange={e => setBuilderForm({ ...builderForm, value: e.target.value })}
+            className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 w-24"
+            placeholder="ค่า"
+            required
+          />
+          <span className="text-sm text-gray-600 font-medium whitespace-nowrap">ส่งแจ้งเตือนทาง</span>
+          <select
+            value={builderForm.channel}
+            onChange={e => setBuilderForm({ ...builderForm, channel: e.target.value })}
+            className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 bg-white"
+          >
+            <option value="email">Email</option>
+            <option value="sms">SMS</option>
+            <option value="line">LINE</option>
+          </select>
+          <button
+            type="submit"
+            className="btn-primary text-sm px-4 py-2 whitespace-nowrap"
+          >
+            เพิ่ม
+          </button>
+        </form>
       </div>
 
       {/* Create Alert Form */}
@@ -103,6 +184,8 @@ export default function Alerts() {
                   <option value=">">{'> มากกว่า'}</option>
                   <option value="<">{'< น้อยกว่า'}</option>
                   <option value="=">=  เท่ากับ</option>
+                  <option value=">=">{'>= มากกว่าหรือเท่ากับ'}</option>
+                  <option value="<=">{'<= น้อยกว่าหรือเท่ากับ'}</option>
                 </select>
               </div>
               <div>
@@ -125,6 +208,7 @@ export default function Alerts() {
                 >
                   <option value="email">อีเมล</option>
                   <option value="sms">SMS</option>
+                  <option value="line">LINE</option>
                   <option value="both">อีเมล + SMS</option>
                 </select>
               </div>
@@ -147,17 +231,40 @@ export default function Alerts() {
           </h3>
         </div>
         <div className="space-y-2">
+          {/* Pre-populated pinned alert cards */}
+          {pinnedAlerts.map(pinned => (
+            <div
+              key={pinned.id}
+              className="flex items-center gap-4 p-4 rounded-xl border border-blue-200 bg-blue-50/60"
+              style={{ borderLeft: '4px solid #0D5C8F' }}
+            >
+              <div className="p-2 rounded-lg bg-[#0D5C8F] text-white flex-shrink-0">
+                <Mail size={16} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-800">{pinned.label}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{pinned.description}</p>
+              </div>
+              <div className="flex-shrink-0">
+                <span className={`badge text-xs font-medium px-2 py-1 rounded-full ${pinned.channelColor}`}>
+                  {pinned.channels}
+                </span>
+              </div>
+            </div>
+          ))}
+
+          {/* Dynamic alerts */}
           {alerts.map(alert => (
             <div key={alert.id} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${alert.active ? 'bg-blue-50/40 border-blue-100' : 'bg-gray-50 border-gray-100 opacity-60'}`}>
               <div className={`p-2 rounded-lg ${alert.active ? 'bg-[#0D5C8F] text-white' : 'bg-gray-200 text-gray-500'}`}>
-                {alert.channel === 'email' ? <Mail size={16} /> : <MessageSquare size={16} />}
+                {alert.channel === 'email' ? <Mail size={16} /> : alert.channel === 'line' ? <MessageSquare size={16} /> : <MessageSquare size={16} />}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-800">
                   {alert.metric} <span className="font-mono text-[#0D5C8F]">{alert.condition}</span> {alert.threshold}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  ช่องทาง: {alert.channel === 'email' ? 'อีเมล' : alert.channel === 'sms' ? 'SMS' : 'อีเมล + SMS'} — สร้าง {alert.createdAt}
+                  ช่องทาง: {alert.channel === 'email' ? 'อีเมล' : alert.channel === 'sms' ? 'SMS' : alert.channel === 'line' ? 'LINE' : 'อีเมล + SMS'} — สร้าง {alert.createdAt}
                 </p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
@@ -192,12 +299,11 @@ export default function Alerts() {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left py-2.5 px-3 text-gray-500 font-medium">ตัวชี้วัด</th>
+                <th className="text-left py-2.5 px-3 text-gray-500 font-medium">เวลา</th>
+                <th className="text-left py-2.5 px-3 text-gray-500 font-medium">เงื่อนไข</th>
                 <th className="text-center py-2.5 px-3 text-gray-500 font-medium">ค่าที่ตรวจพบ</th>
-                <th className="text-center py-2.5 px-3 text-gray-500 font-medium">เกณฑ์</th>
-                <th className="text-left py-2.5 px-3 text-gray-500 font-medium">วันเวลา</th>
-                <th className="text-center py-2.5 px-3 text-gray-500 font-medium">ช่องทาง</th>
-                <th className="text-center py-2.5 px-3 text-gray-500 font-medium">ระดับ</th>
+                <th className="text-left py-2.5 px-3 text-gray-500 font-medium">ส่งถึง</th>
+                <th className="text-center py-2.5 px-3 text-gray-500 font-medium">สถานะ</th>
               </tr>
             </thead>
             <tbody>
@@ -205,13 +311,12 @@ export default function Alerts() {
                 const { icon: HIcon, cls } = historyTypeStyle[h.type] || historyTypeStyle.info
                 return (
                   <tr key={h.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                    <td className="py-3 px-3 font-medium text-gray-800">{h.metric}</td>
-                    <td className="py-3 px-3 text-center font-mono font-semibold text-gray-700">{h.value}</td>
-                    <td className="py-3 px-3 text-center text-gray-500">{h.threshold}</td>
-                    <td className="py-3 px-3 text-gray-500">{h.triggered}</td>
-                    <td className="py-3 px-3 text-center text-gray-500">
-                      {h.channel === 'email' ? <Mail size={13} className="mx-auto" /> : <MessageSquare size={13} className="mx-auto" />}
+                    <td className="py-3 px-3 text-gray-500 whitespace-nowrap">{h.triggered}</td>
+                    <td className="py-3 px-3 font-medium text-gray-800">
+                      {h.metric} <span className="font-mono text-[#0D5C8F]">{'>'}</span> {h.threshold}
                     </td>
+                    <td className="py-3 px-3 text-center font-mono font-semibold text-gray-700">{h.value}</td>
+                    <td className="py-3 px-3 text-gray-500">{h.sentTo}</td>
                     <td className="py-3 px-3 text-center">
                       <span className={`inline-flex items-center gap-1 badge ${cls}`}>
                         <HIcon size={10} />

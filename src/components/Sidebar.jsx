@@ -14,6 +14,9 @@ import {
   ChevronRight,
   LogOut,
   Shield,
+  PlusSquare,
+  Database,
+  GitBranch,
 } from 'lucide-react'
 
 const navItems = [
@@ -28,8 +31,21 @@ const navItems = [
     items: [
       { path: '/financial', icon: DollarSign, label: 'ข้อมูลการเงิน', labelEn: 'Financial' },
       { path: '/procurement', icon: ShoppingCart, label: 'ข้อมูลพัสดุ', labelEn: 'Procurement' },
-      { path: '/accreditation', icon: Award, label: 'การรับรองคุณภาพ', labelEn: 'Accreditation' },
+      { path: '/accreditation', icon: Award, label: 'การรับรองคุณภาพ', labelEn: 'Accreditation', highlight: true },
       { path: '/policy', icon: Shield, label: 'ข้อมูลนโยบาย', labelEn: 'Policy' },
+    ]
+  },
+  {
+    group: 'Self-Service',
+    items: [
+      { path: '/self-service', icon: PlusSquare, label: 'สร้างรายงาน', labelEn: 'Self-Service' },
+    ]
+  },
+  {
+    group: 'เครื่องมือข้อมูล',
+    items: [
+      { path: '/data-prep', icon: Database, label: 'Data Preparation', labelEn: 'Data Preparation' },
+      { path: '/data-modeling', icon: GitBranch, label: 'Data Modeling', labelEn: 'Data Modeling' },
     ]
   },
   {
@@ -99,13 +115,13 @@ export default function Sidebar({ collapsed, setCollapsed }) {
                 to={item.path}
                 end={item.path === '/'}
                 className={({ isActive }) =>
-                  `sidebar-item mb-0.5 ${isActive ? 'active' : 'text-blue-100/80'} ${collapsed ? 'justify-center px-0' : ''}`
+                  `sidebar-item mb-0.5 ${isActive ? 'active' : item.highlight ? 'text-amber-300 font-semibold' : 'text-blue-100/80'} ${collapsed ? 'justify-center px-0' : ''}`
                 }
                 title={collapsed ? item.label : undefined}
               >
                 <item.icon size={18} className="flex-shrink-0" />
                 {!collapsed && (
-                  <span className="truncate text-sm">{item.label}</span>
+                  <span className="truncate text-sm">{item.label}{item.highlight && <span className="ml-1 text-amber-400">★</span>}</span>
                 )}
               </NavLink>
             ))}
