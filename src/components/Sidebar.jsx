@@ -29,7 +29,7 @@ const navItems = [
     items: [
       { path: '/financial', icon: DollarSign, label: 'ข้อมูลการเงิน', labelEn: 'Financial' },
       { path: '/procurement', icon: ShoppingCart, label: 'ข้อมูลพัสดุ', labelEn: 'Procurement' },
-      { path: '/accreditation', icon: Award, label: 'การรับรองคุณภาพ', labelEn: 'Accreditation', highlight: true },
+      { path: '/accreditation', icon: Award, label: 'การรับรองคุณภาพ', labelEn: 'Accreditation' },
       { path: '/policy', icon: Shield, label: 'ข้อมูลนโยบาย', labelEn: 'Policy' },
     ]
   },
