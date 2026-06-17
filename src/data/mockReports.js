@@ -1,0 +1,55 @@
+export const reports = [
+  { id: 1, title: 'รายงานงบประมาณประจำปี 2567', category: 'การเงิน', lastUpdated: '10/06/2567', views: 245, comments: 3, shared: true, format: 'PDF' },
+  { id: 2, title: 'รายงานรายรับ-รายจ่าย ไตรมาส 2/2567', category: 'การเงิน', lastUpdated: '05/06/2567', views: 189, comments: 2, shared: false, format: 'Excel' },
+  { id: 3, title: 'รายงานกระแสเงินสดประจำเดือนพฤษภาคม', category: 'การเงิน', lastUpdated: '01/06/2567', views: 134, comments: 1, shared: true, format: 'PDF' },
+  { id: 4, title: 'รายงานการใช้งบประมาณหน่วยงาน', category: 'การเงิน', lastUpdated: '28/05/2567', views: 98, comments: 4, shared: false, format: 'Excel' },
+  { id: 5, title: 'รายงานวิเคราะห์ต้นทุนบริการ', category: 'การเงิน', lastUpdated: '25/05/2567', views: 167, comments: 2, shared: true, format: 'PDF' },
+  { id: 6, title: 'รายงานประสิทธิภาพการเงินรายโรงพยาบาล', category: 'การเงิน', lastUpdated: '20/05/2567', views: 210, comments: 5, shared: true, format: 'PDF' },
+  { id: 7, title: 'รายงานการจัดซื้อจัดจ้างประจำเดือน', category: 'พัสดุ', lastUpdated: '09/06/2567', views: 156, comments: 2, shared: false, format: 'Excel' },
+  { id: 8, title: 'รายงานสรุปพัสดุคงคลัง Q2/2567', category: 'พัสดุ', lastUpdated: '03/06/2567', views: 89, comments: 1, shared: true, format: 'PDF' },
+  { id: 9, title: 'รายงานผู้จัดจำหน่ายที่ได้รับอนุมัติ', category: 'พัสดุ', lastUpdated: '30/05/2567', views: 112, comments: 0, shared: false, format: 'Excel' },
+  { id: 10, title: 'รายงานสถานะการจัดซื้อรายโครงการ', category: 'พัสดุ', lastUpdated: '27/05/2567', views: 145, comments: 3, shared: true, format: 'PDF' },
+  { id: 11, title: 'รายงานการตรวจรับพัสดุประจำเดือน', category: 'พัสดุ', lastUpdated: '22/05/2567', views: 78, comments: 1, shared: false, format: 'Excel' },
+  { id: 12, title: 'รายงานประสิทธิภาพผู้จัดจำหน่าย', category: 'พัสดุ', lastUpdated: '18/05/2567', views: 93, comments: 2, shared: true, format: 'PDF' },
+  { id: 13, title: 'รายงานการประเมินคุณภาพโรงพยาบาล HA ปี 2567', category: 'การรับรอง', lastUpdated: '08/06/2567', views: 389, comments: 7, shared: true, format: 'PDF' },
+  { id: 14, title: 'รายงานผลการสำรวจ 50 โรงพยาบาล', category: 'การรับรอง', lastUpdated: '04/06/2567', views: 312, comments: 5, shared: true, format: 'PDF' },
+  { id: 15, title: 'รายงานสถิติการรับรองคุณภาพรายภาค', category: 'การรับรอง', lastUpdated: '01/06/2567', views: 245, comments: 4, shared: false, format: 'Excel' },
+  { id: 16, title: 'รายงานโรงพยาบาลที่ใบรับรองใกล้หมดอายุ', category: 'การรับรอง', lastUpdated: '29/05/2567', views: 178, comments: 3, shared: true, format: 'PDF' },
+  { id: 17, title: 'รายงานแนวโน้มคะแนน HA 5 ปี', category: 'การรับรอง', lastUpdated: '25/05/2567', views: 298, comments: 6, shared: true, format: 'PDF' },
+  { id: 18, title: 'รายงานการประเมิน 12 มิติคุณภาพ', category: 'การรับรอง', lastUpdated: '20/05/2567', views: 234, comments: 4, shared: false, format: 'Excel' },
+  { id: 19, title: 'รายงานสถิติโรงพยาบาลรายจังหวัด', category: 'การรับรอง', lastUpdated: '15/05/2567', views: 189, comments: 2, shared: true, format: 'PDF' },
+  { id: 20, title: 'รายงานความก้าวหน้านโยบาย Q2/2567', category: 'นโยบาย', lastUpdated: '07/06/2567', views: 267, comments: 5, shared: true, format: 'PDF' },
+  { id: 21, title: 'รายงาน KPI ยุทธศาสตร์ปี 2567', category: 'นโยบาย', lastUpdated: '03/06/2567', views: 312, comments: 8, shared: true, format: 'PDF' },
+  { id: 22, title: 'รายงานการดำเนินนโยบายสำคัญ', category: 'นโยบาย', lastUpdated: '31/05/2567', views: 198, comments: 3, shared: false, format: 'Excel' },
+  { id: 23, title: 'รายงานผลลัพธ์โครงการยุทธศาสตร์', category: 'นโยบาย', lastUpdated: '27/05/2567', views: 156, comments: 2, shared: true, format: 'PDF' },
+  { id: 24, title: 'รายงานการบรรลุเป้าหมายระดับชาติ', category: 'นโยบาย', lastUpdated: '23/05/2567', views: 289, comments: 6, shared: true, format: 'PDF' },
+  { id: 25, title: 'รายงานการเงินรวมประจำปีงบประมาณ', category: 'การเงิน', lastUpdated: '15/05/2567', views: 345, comments: 9, shared: true, format: 'PDF' },
+  { id: 26, title: 'รายงานวิเคราะห์ความเสี่ยงทางการเงิน', category: 'การเงิน', lastUpdated: '12/05/2567', views: 178, comments: 3, shared: false, format: 'Excel' },
+  { id: 27, title: 'รายงานแผนการจัดซื้อรายปี', category: 'พัสดุ', lastUpdated: '14/05/2567', views: 123, comments: 2, shared: true, format: 'PDF' },
+  { id: 28, title: 'รายงานการจัดซื้อครุภัณฑ์การแพทย์', category: 'พัสดุ', lastUpdated: '10/05/2567', views: 167, comments: 3, shared: false, format: 'Excel' },
+  { id: 29, title: 'รายงานผลการประเมินโรงพยาบาลเอกชน', category: 'การรับรอง', lastUpdated: '08/05/2567', views: 201, comments: 4, shared: true, format: 'PDF' },
+  { id: 30, title: 'รายงานแผนยุทธศาสตร์ HAI ปี 2568', category: 'นโยบาย', lastUpdated: '05/05/2567', views: 412, comments: 12, shared: true, format: 'PDF' },
+  { id: 31, title: 'รายงานสรุปผลการดำเนินงานประจำปี', category: 'นโยบาย', lastUpdated: '01/05/2567', views: 389, comments: 10, shared: true, format: 'PDF' },
+  { id: 32, title: 'รายงานการปรับปรุงกระบวนการรับรอง', category: 'การรับรอง', lastUpdated: '28/04/2567', views: 156, comments: 3, shared: false, format: 'Excel' },
+]
+
+export const scheduledReports = [
+  { id: 1, title: 'รายงานงบประมาณประจำเดือน', frequency: 'รายเดือน', nextRun: '01/07/2567', recipients: ['finance@hai.or.th', 'cfo@hai.or.th'], format: 'PDF', status: 'ใช้งาน' },
+  { id: 2, title: 'รายงาน KPI รายสัปดาห์', frequency: 'รายสัปดาห์', nextRun: '17/06/2567', recipients: ['director@hai.or.th'], format: 'Excel', status: 'ใช้งาน' },
+  { id: 3, title: 'รายงานการรับรองคุณภาพรายวัน', frequency: 'รายวัน', nextRun: '17/06/2567', recipients: ['quality@hai.or.th'], format: 'PDF', status: 'ใช้งาน' },
+  { id: 4, title: 'รายงานการจัดซื้อจัดจ้างรายสัปดาห์', frequency: 'รายสัปดาห์', nextRun: '24/06/2567', recipients: ['procurement@hai.or.th', 'audit@hai.or.th'], format: 'Excel', status: 'ระงับ' },
+  { id: 5, title: 'รายงานยุทธศาสตร์รายไตรมาส', frequency: 'รายไตรมาส', nextRun: '01/07/2567', recipients: ['board@hai.or.th', 'director@hai.or.th'], format: 'PDF', status: 'ใช้งาน' },
+]
+
+export const mockComments = {
+  1: [
+    { id: 1, author: 'นพ.สมชาย ใจดี', time: '2 ชั่วโมงที่แล้ว', text: 'รายงานนี้ครบถ้วน ควรเพิ่มกราฟเปรียบเทียบกับปีที่แล้วด้วยครับ' },
+    { id: 2, author: 'ดร.วิชัย ศรีสมบัติ', time: '1 วันที่แล้ว', text: 'ขอบคุณสำหรับข้อมูลที่ละเอียดมากค่ะ' },
+    { id: 3, author: 'นาย ประทีป สุวรรณ', time: '3 วันที่แล้ว', text: 'ตัวเลขส่วนรายจ่ายน่าจะตรวจสอบอีกครั้งครับ' },
+  ],
+  13: [
+    { id: 1, author: 'พญ.มาลี จันทร์เพ็ง', time: '30 นาทีที่แล้ว', text: 'ผลการประเมินปีนี้ดีขึ้นอย่างมีนัยสำคัญ ยินดีด้วยครับทุกท่าน' },
+    { id: 2, author: 'นพ.กิตติพงศ์ มีสุข', time: '5 ชั่วโมงที่แล้ว', text: 'ควรมีการวิเคราะห์ในส่วนที่ยังต่ำกว่าเกณฑ์เพิ่มเติมค่ะ' },
+    { id: 3, author: 'นพ.สุรชัย วงค์ทอง', time: '2 วันที่แล้ว', text: 'รายงานนี้จะนำไปใช้ในการประชุมคณะกรรมการด้วยครับ' },
+  ],
+}
