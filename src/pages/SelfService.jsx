@@ -1,140 +1,76 @@
 import { useState } from "react";
 import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell,
-  AreaChart,
-  Area,
-  RadarChart,
-  Radar,
-  PolarGrid,
-  PolarAngleAxis,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
+  BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
+  AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
 import {
-  BarChart2,
-  FileText,
-  Download,
-  Mail,
-  Clock,
-  Plus,
-  X,
-  RefreshCw,
-  Settings,
-  Save,
-  Search,
-  Share2,
-  MessageSquare,
-  Send,
-  Calendar,
-  DollarSign,
-  ShoppingCart,
-  Award,
-  Shield,
+  BarChart2, FileText, Download, Mail, Clock, Plus, X,
+  RefreshCw, Settings, Save, Bell, CheckCircle2,
+  AlertTriangle, Send, Calendar,
 } from "lucide-react";
-import { reports, scheduledReports, mockComments } from "../data/mockReports";
+import { scheduledReports } from "../data/mockReports";
 
-// ─── Mock Data Sets ───────────────────────────────────────────────────────────
+// ─── Mock data ────────────────────────────────────────────────────────────────
 
 const MOCK_DATA = {
   การเงิน: {
     bar: [
-      { name: "ม.ค.", value: 4200, value2: 3800 },
-      { name: "ก.พ.", value: 3800, value2: 4100 },
-      { name: "มี.ค.", value: 5100, value2: 4700 },
-      { name: "เม.ย.", value: 4700, value2: 5200 },
-      { name: "พ.ค.", value: 5900, value2: 5400 },
-      { name: "มิ.ย.", value: 6200, value2: 5800 },
-      { name: "ก.ค.", value: 5800, value2: 6100 },
-      { name: "ส.ค.", value: 6500, value2: 6000 },
+      { name: "ม.ค.", value: 4200, value2: 3800 }, { name: "ก.พ.", value: 3800, value2: 4100 },
+      { name: "มี.ค.", value: 5100, value2: 4700 }, { name: "เม.ย.", value: 4700, value2: 5200 },
+      { name: "พ.ค.", value: 5900, value2: 5400 }, { name: "มิ.ย.", value: 6200, value2: 5800 },
+      { name: "ก.ค.", value: 5800, value2: 6100 }, { name: "ส.ค.", value: 6500, value2: 6000 },
     ],
-    barLabel: "รายรับ (ล้านบาท)",
-    barTitle: "รายรับตามเดือน",
+    barLabel: "รายรับ (ล้านบาท)", barTitle: "รายรับตามเดือน",
     line: [
-      { name: "ม.ค.", actual: 4200, budget: 4000 },
-      { name: "ก.พ.", actual: 3800, budget: 4000 },
-      { name: "มี.ค.", actual: 5100, budget: 4500 },
-      { name: "เม.ย.", actual: 4700, budget: 4500 },
-      { name: "พ.ค.", actual: 5900, budget: 5000 },
-      { name: "มิ.ย.", actual: 6200, budget: 5500 },
-      { name: "ก.ค.", actual: 5800, budget: 5500 },
-      { name: "ส.ค.", actual: 6500, budget: 6000 },
+      { name: "ม.ค.", actual: 4200, budget: 4000 }, { name: "ก.พ.", actual: 3800, budget: 4000 },
+      { name: "มี.ค.", actual: 5100, budget: 4500 }, { name: "เม.ย.", actual: 4700, budget: 4500 },
+      { name: "พ.ค.", actual: 5900, budget: 5000 }, { name: "มิ.ย.", actual: 6200, budget: 5500 },
+      { name: "ก.ค.", actual: 5800, budget: 5500 }, { name: "ส.ค.", actual: 6500, budget: 6000 },
     ],
     lineTitle: "แนวโน้มรายรับเทียบงบประมาณ",
   },
   พัสดุ: {
     bar: [
-      { name: "เวชภัณฑ์", value: 8200, value2: 7600 },
-      { name: "ครุภัณฑ์", value: 5400, value2: 4900 },
-      { name: "วัสดุสิ้นเปลือง", value: 3100, value2: 2900 },
-      { name: "บริการ", value: 4700, value2: 5100 },
-      { name: "อาหาร", value: 2200, value2: 2400 },
-      { name: "อื่นๆ", value: 1800, value2: 1600 },
+      { name: "เวชภัณฑ์", value: 8200, value2: 7600 }, { name: "ครุภัณฑ์", value: 5400, value2: 4900 },
+      { name: "วัสดุสิ้นเปลือง", value: 3100, value2: 2900 }, { name: "บริการ", value: 4700, value2: 5100 },
+      { name: "อาหาร", value: 2200, value2: 2400 }, { name: "อื่นๆ", value: 1800, value2: 1600 },
     ],
-    barLabel: "มูลค่าจัดซื้อ (พันบาท)",
-    barTitle: "มูลค่าการจัดซื้อตามหมวดหมู่",
+    barLabel: "มูลค่าจัดซื้อ (พันบาท)", barTitle: "มูลค่าการจัดซื้อตามหมวดหมู่",
     line: [
-      { name: "ม.ค.", actual: 6200, budget: 7000 },
-      { name: "ก.พ.", actual: 5800, budget: 7000 },
-      { name: "มี.ค.", actual: 7400, budget: 7000 },
-      { name: "เม.ย.", actual: 6900, budget: 7000 },
-      { name: "พ.ค.", actual: 8100, budget: 7500 },
-      { name: "มิ.ย.", actual: 7600, budget: 7500 },
-      { name: "ก.ค.", actual: 8400, budget: 8000 },
-      { name: "ส.ค.", actual: 7900, budget: 8000 },
+      { name: "ม.ค.", actual: 6200, budget: 7000 }, { name: "ก.พ.", actual: 5800, budget: 7000 },
+      { name: "มี.ค.", actual: 7400, budget: 7000 }, { name: "เม.ย.", actual: 6900, budget: 7000 },
+      { name: "พ.ค.", actual: 8100, budget: 7500 }, { name: "มิ.ย.", actual: 7600, budget: 7500 },
+      { name: "ก.ค.", actual: 8400, budget: 8000 }, { name: "ส.ค.", actual: 7900, budget: 8000 },
     ],
     lineTitle: "แนวโน้มค่าใช้จ่ายพัสดุรายเดือน",
   },
   การรับรอง: {
     bar: [
-      { name: "เหนือ", value: 72, value2: 68 },
-      { name: "กลาง", value: 85, value2: 80 },
-      { name: "อีสาน", value: 64, value2: 70 },
-      { name: "ใต้", value: 78, value2: 74 },
-      { name: "ตะวันตก", value: 69, value2: 65 },
-      { name: "กทม.", value: 92, value2: 88 },
+      { name: "เหนือ", value: 72, value2: 68 }, { name: "กลาง", value: 85, value2: 80 },
+      { name: "อีสาน", value: 64, value2: 70 }, { name: "ใต้", value: 78, value2: 74 },
+      { name: "ตะวันตก", value: 69, value2: 65 }, { name: "กทม.", value: 92, value2: 88 },
     ],
-    barLabel: "คะแนนการรับรอง (%)",
-    barTitle: "คะแนนการรับรองแยกตามภาค",
+    barLabel: "คะแนนการรับรอง (%)", barTitle: "คะแนนการรับรองแยกตามภาค",
     line: [
-      { name: "2562", actual: 68, budget: 70 },
-      { name: "2563", actual: 71, budget: 72 },
-      { name: "2564", actual: 74, budget: 75 },
-      { name: "2565", actual: 79, budget: 78 },
-      { name: "2566", actual: 83, budget: 80 },
-      { name: "2567", actual: 85, budget: 85 },
+      { name: "2562", actual: 68, budget: 70 }, { name: "2563", actual: 71, budget: 72 },
+      { name: "2564", actual: 74, budget: 75 }, { name: "2565", actual: 79, budget: 78 },
+      { name: "2566", actual: 83, budget: 80 }, { name: "2567", actual: 85, budget: 85 },
     ],
     lineTitle: "แนวโน้มคะแนนการรับรองรายปี",
   },
   นโยบาย: {
     bar: [
-      { name: "KPI 1", value: 88, value2: 82 },
-      { name: "KPI 2", value: 74, value2: 79 },
-      { name: "KPI 3", value: 91, value2: 87 },
-      { name: "KPI 4", value: 65, value2: 70 },
-      { name: "KPI 5", value: 82, value2: 85 },
-      { name: "KPI 6", value: 95, value2: 90 },
+      { name: "KPI 1", value: 88, value2: 82 }, { name: "KPI 2", value: 74, value2: 79 },
+      { name: "KPI 3", value: 91, value2: 87 }, { name: "KPI 4", value: 65, value2: 70 },
+      { name: "KPI 5", value: 82, value2: 85 }, { name: "KPI 6", value: 95, value2: 90 },
     ],
-    barLabel: "อัตราบรรลุ (%)",
-    barTitle: "อัตราบรรลุเป้าหมาย KPI",
+    barLabel: "อัตราบรรลุ (%)", barTitle: "อัตราบรรลุเป้าหมาย KPI",
     line: [
-      { name: "ม.ค.", actual: 78, budget: 80 },
-      { name: "ก.พ.", actual: 80, budget: 80 },
-      { name: "มี.ค.", actual: 83, budget: 82 },
-      { name: "เม.ย.", actual: 81, budget: 82 },
-      { name: "พ.ค.", actual: 86, budget: 84 },
-      { name: "มิ.ย.", actual: 88, budget: 85 },
-      { name: "ก.ค.", actual: 87, budget: 86 },
-      { name: "ส.ค.", actual: 90, budget: 87 },
+      { name: "ม.ค.", actual: 78, budget: 80 }, { name: "ก.พ.", actual: 80, budget: 80 },
+      { name: "มี.ค.", actual: 83, budget: 82 }, { name: "เม.ย.", actual: 81, budget: 82 },
+      { name: "พ.ค.", actual: 86, budget: 84 }, { name: "มิ.ย.", actual: 88, budget: 85 },
+      { name: "ก.ค.", actual: 87, budget: 86 }, { name: "ส.ค.", actual: 90, budget: 87 },
     ],
     lineTitle: "แนวโน้มการบรรลุนโยบายรายเดือน",
   },
@@ -143,154 +79,104 @@ const MOCK_DATA = {
 const MOCK_DATA_ALT = {
   การเงิน: {
     bar: [
-      { name: "ม.ค.", value: 3900, value2: 4100 },
-      { name: "ก.พ.", value: 4200, value2: 3900 },
-      { name: "มี.ค.", value: 4800, value2: 5000 },
-      { name: "เม.ย.", value: 5100, value2: 4800 },
-      { name: "พ.ค.", value: 5500, value2: 5700 },
-      { name: "มิ.ย.", value: 6000, value2: 6200 },
-      { name: "ก.ค.", value: 6300, value2: 5900 },
-      { name: "ส.ค.", value: 6800, value2: 6400 },
+      { name: "ม.ค.", value: 3900, value2: 4100 }, { name: "ก.พ.", value: 4200, value2: 3900 },
+      { name: "มี.ค.", value: 4800, value2: 5000 }, { name: "เม.ย.", value: 5100, value2: 4800 },
+      { name: "พ.ค.", value: 5500, value2: 5700 }, { name: "มิ.ย.", value: 6000, value2: 6200 },
+      { name: "ก.ค.", value: 6300, value2: 5900 }, { name: "ส.ค.", value: 6800, value2: 6400 },
     ],
-    barLabel: "รายรับ (ล้านบาท)",
-    barTitle: "รายรับตามเดือน (ชุดที่ 2)",
+    barLabel: "รายรับ (ล้านบาท)", barTitle: "รายรับตามเดือน (ชุดที่ 2)",
     line: [
-      { name: "ม.ค.", actual: 3900, budget: 4200 },
-      { name: "ก.พ.", actual: 4200, budget: 4200 },
-      { name: "มี.ค.", actual: 4800, budget: 4600 },
-      { name: "เม.ย.", actual: 5100, budget: 4600 },
-      { name: "พ.ค.", actual: 5500, budget: 5200 },
-      { name: "มิ.ย.", actual: 6000, budget: 5700 },
-      { name: "ก.ค.", actual: 6300, budget: 5700 },
-      { name: "ส.ค.", actual: 6800, budget: 6200 },
+      { name: "ม.ค.", actual: 3900, budget: 4200 }, { name: "ก.พ.", actual: 4200, budget: 4200 },
+      { name: "มี.ค.", actual: 4800, budget: 4600 }, { name: "เม.ย.", actual: 5100, budget: 4600 },
+      { name: "พ.ค.", actual: 5500, budget: 5200 }, { name: "มิ.ย.", actual: 6000, budget: 5700 },
+      { name: "ก.ค.", actual: 6300, budget: 5700 }, { name: "ส.ค.", actual: 6800, budget: 6200 },
     ],
     lineTitle: "แนวโน้มรายรับเทียบงบประมาณ (ชุดที่ 2)",
   },
   พัสดุ: {
     bar: [
-      { name: "เวชภัณฑ์", value: 7900, value2: 8100 },
-      { name: "ครุภัณฑ์", value: 5800, value2: 5200 },
-      { name: "วัสดุสิ้นเปลือง", value: 2900, value2: 3200 },
-      { name: "บริการ", value: 5100, value2: 4800 },
-      { name: "อาหาร", value: 2500, value2: 2300 },
-      { name: "อื่นๆ", value: 1600, value2: 1900 },
+      { name: "เวชภัณฑ์", value: 7900, value2: 8100 }, { name: "ครุภัณฑ์", value: 5800, value2: 5200 },
+      { name: "วัสดุสิ้นเปลือง", value: 2900, value2: 3200 }, { name: "บริการ", value: 5100, value2: 4800 },
+      { name: "อาหาร", value: 2500, value2: 2300 }, { name: "อื่นๆ", value: 1600, value2: 1900 },
     ],
-    barLabel: "มูลค่าจัดซื้อ (พันบาท)",
-    barTitle: "มูลค่าการจัดซื้อตามหมวดหมู่ (ชุดที่ 2)",
+    barLabel: "มูลค่าจัดซื้อ (พันบาท)", barTitle: "มูลค่าการจัดซื้อ (ชุดที่ 2)",
     line: [
-      { name: "ม.ค.", actual: 6500, budget: 6800 },
-      { name: "ก.พ.", actual: 6100, budget: 6800 },
-      { name: "มี.ค.", actual: 7700, budget: 7200 },
-      { name: "เม.ย.", actual: 7200, budget: 7200 },
-      { name: "พ.ค.", actual: 8400, budget: 7800 },
-      { name: "มิ.ย.", actual: 7900, budget: 7800 },
-      { name: "ก.ค.", actual: 8700, budget: 8300 },
-      { name: "ส.ค.", actual: 8200, budget: 8300 },
+      { name: "ม.ค.", actual: 6500, budget: 6800 }, { name: "ก.พ.", actual: 6100, budget: 6800 },
+      { name: "มี.ค.", actual: 7700, budget: 7200 }, { name: "เม.ย.", actual: 7200, budget: 7200 },
+      { name: "พ.ค.", actual: 8400, budget: 7800 }, { name: "มิ.ย.", actual: 7900, budget: 7800 },
+      { name: "ก.ค.", actual: 8700, budget: 8300 }, { name: "ส.ค.", actual: 8200, budget: 8300 },
     ],
-    lineTitle: "แนวโน้มค่าใช้จ่ายพัสดุรายเดือน (ชุดที่ 2)",
+    lineTitle: "แนวโน้มค่าใช้จ่ายพัสดุ (ชุดที่ 2)",
   },
   การรับรอง: {
     bar: [
-      { name: "เหนือ", value: 75, value2: 71 },
-      { name: "กลาง", value: 88, value2: 83 },
-      { name: "อีสาน", value: 67, value2: 72 },
-      { name: "ใต้", value: 81, value2: 77 },
-      { name: "ตะวันตก", value: 72, value2: 68 },
-      { name: "กทม.", value: 94, value2: 91 },
+      { name: "เหนือ", value: 75, value2: 71 }, { name: "กลาง", value: 88, value2: 83 },
+      { name: "อีสาน", value: 67, value2: 72 }, { name: "ใต้", value: 81, value2: 77 },
+      { name: "ตะวันตก", value: 72, value2: 68 }, { name: "กทม.", value: 94, value2: 91 },
     ],
-    barLabel: "คะแนนการรับรอง (%)",
-    barTitle: "คะแนนการรับรองแยกตามภาค (ชุดที่ 2)",
+    barLabel: "คะแนนการรับรอง (%)", barTitle: "คะแนนการรับรองแยกตามภาค (ชุดที่ 2)",
     line: [
-      { name: "2562", actual: 70, budget: 72 },
-      { name: "2563", actual: 73, budget: 74 },
-      { name: "2564", actual: 76, budget: 77 },
-      { name: "2565", actual: 81, budget: 80 },
-      { name: "2566", actual: 85, budget: 82 },
-      { name: "2567", actual: 88, budget: 87 },
+      { name: "2562", actual: 70, budget: 72 }, { name: "2563", actual: 73, budget: 74 },
+      { name: "2564", actual: 76, budget: 77 }, { name: "2565", actual: 81, budget: 80 },
+      { name: "2566", actual: 85, budget: 82 }, { name: "2567", actual: 88, budget: 87 },
     ],
     lineTitle: "แนวโน้มคะแนนการรับรองรายปี (ชุดที่ 2)",
   },
   นโยบาย: {
     bar: [
-      { name: "KPI 1", value: 90, value2: 85 },
-      { name: "KPI 2", value: 77, value2: 81 },
-      { name: "KPI 3", value: 93, value2: 89 },
-      { name: "KPI 4", value: 68, value2: 73 },
-      { name: "KPI 5", value: 85, value2: 88 },
-      { name: "KPI 6", value: 97, value2: 93 },
+      { name: "KPI 1", value: 90, value2: 85 }, { name: "KPI 2", value: 77, value2: 81 },
+      { name: "KPI 3", value: 93, value2: 89 }, { name: "KPI 4", value: 68, value2: 73 },
+      { name: "KPI 5", value: 85, value2: 88 }, { name: "KPI 6", value: 97, value2: 93 },
     ],
-    barLabel: "อัตราบรรลุ (%)",
-    barTitle: "อัตราบรรลุเป้าหมาย KPI (ชุดที่ 2)",
+    barLabel: "อัตราบรรลุ (%)", barTitle: "อัตราบรรลุ KPI (ชุดที่ 2)",
     line: [
-      { name: "ม.ค.", actual: 80, budget: 82 },
-      { name: "ก.พ.", actual: 82, budget: 82 },
-      { name: "มี.ค.", actual: 85, budget: 84 },
-      { name: "เม.ย.", actual: 83, budget: 84 },
-      { name: "พ.ค.", actual: 88, budget: 86 },
-      { name: "มิ.ย.", actual: 90, budget: 87 },
-      { name: "ก.ค.", actual: 89, budget: 88 },
-      { name: "ส.ค.", actual: 92, budget: 89 },
+      { name: "ม.ค.", actual: 80, budget: 82 }, { name: "ก.พ.", actual: 82, budget: 82 },
+      { name: "มี.ค.", actual: 85, budget: 84 }, { name: "เม.ย.", actual: 83, budget: 84 },
+      { name: "พ.ค.", actual: 88, budget: 86 }, { name: "มิ.ย.", actual: 90, budget: 87 },
+      { name: "ก.ค.", actual: 89, budget: 88 }, { name: "ส.ค.", actual: 92, budget: 89 },
     ],
-    lineTitle: "แนวโน้มการบรรลุนโยบายรายเดือน (ชุดที่ 2)",
+    lineTitle: "แนวโน้มการบรรลุนโยบาย (ชุดที่ 2)",
   },
 };
 
-const PROVINCES = [
-  "กรุงเทพฯ",
-  "เชียงใหม่",
-  "ขอนแก่น",
-  "นครราชสีมา",
-  "สงขลา",
-  "ระยอง",
-  "ภูเก็ต",
-  "อุดรธานี",
-  "เชียงราย",
-  "สุราษฎร์ธานี",
-];
+const PROVINCES = ["กรุงเทพฯ", "เชียงใหม่", "ขอนแก่น", "นครราชสีมา", "สงขลา", "ระยอง", "ภูเก็ต", "อุดรธานี", "เชียงราย", "สุราษฎร์ธานี"];
 
-const SAVED_REPORTS = [
-  {
-    id: 1,
-    name: "รายงานการเงิน Q2/2567",
-    topic: "การเงิน",
-    lastRun: "10 มิ.ย. 2567",
-  },
-  {
-    id: 2,
-    name: "การจัดซื้อเวชภัณฑ์ภาคเหนือ",
-    topic: "พัสดุ",
-    lastRun: "5 มิ.ย. 2567",
-  },
-  {
-    id: 3,
-    name: "ผลการรับรอง รพ.ชุมชน",
-    topic: "การรับรอง",
-    lastRun: "1 มิ.ย. 2567",
-  },
+const ALERT_METRICS = [
+  "คะแนน HA เฉลี่ย", "งบประมาณที่ใช้ (%)", "คำขอจัดซื้อค้าง",
+  "โรงพยาบาลใบรับรองหมดอายุ", "รายรับประจำเดือน", "Hospital Risk Score",
+  "Budget Utilization", "อัตราการรับรอง (%)",
 ];
 
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4"];
 
-const categoryColors = {
-  'การเงิน': 'bg-blue-100 text-blue-700',
-  'พัสดุ': 'bg-teal-100 text-teal-700',
-  'การรับรอง': 'bg-green-100 text-green-700',
-  'นโยบาย': 'bg-purple-100 text-purple-700',
-};
-const categoryIcons = {
-  'การเงิน': DollarSign,
-  'พัสดุ': ShoppingCart,
-  'การรับรอง': Award,
-  'นโยบาย': Shield,
-};
+// ─── Toggle Switch Component ──────────────────────────────────────────────────
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+function Toggle({ enabled, onChange, label, description }) {
+  return (
+    <div className="flex items-start gap-3">
+      <button
+        type="button"
+        onClick={() => onChange(!enabled)}
+        className={`relative flex-shrink-0 inline-flex h-5 w-9 items-center rounded-full transition-colors mt-0.5 ${
+          enabled ? "bg-[#0D5C8F]" : "bg-gray-200"
+        }`}
+      >
+        <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${enabled ? "translate-x-4" : "translate-x-0.5"}`} />
+      </button>
+      <div>
+        <p className="text-xs font-semibold text-gray-700 leading-tight">{label}</p>
+        {description && <p className="text-[11px] text-gray-400 mt-0.5 leading-tight">{description}</p>}
+      </div>
+    </div>
+  );
+}
+
+// ─── Chart Card Component ─────────────────────────────────────────────────────
 
 function ChartCard({ chart, onDelete, topic, reportKey }) {
   const [title, setTitle] = useState(chart.title);
   const useAlt = reportKey % 2 === 1;
-  const dataSet = useAlt ? MOCK_DATA_ALT : MOCK_DATA;
-  const topicData = dataSet[topic] || dataSet["การเงิน"];
+  const topicData = (useAlt ? MOCK_DATA_ALT : MOCK_DATA)[topic] || MOCK_DATA["การเงิน"];
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
@@ -298,97 +184,60 @@ function ChartCard({ chart, onDelete, topic, reportKey }) {
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="flex-1 text-sm font-semibold text-gray-700 border border-transparent hover:border-gray-300 focus:border-blue-400 focus:outline-none rounded px-2 py-1 bg-transparent"
+          onChange={e => setTitle(e.target.value)}
+          className="flex-1 text-sm font-semibold text-gray-700 border border-transparent hover:border-gray-300 focus:border-[#0D5C8F]/40 focus:outline-none rounded-lg px-2 py-1 bg-transparent"
         />
-        <button
-          onClick={onDelete}
-          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-          title="ลบกราฟ"
-        >
-          <X size={16} />
+        <button onClick={onDelete} className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0">
+          <X size={14} />
         </button>
       </div>
 
       {chart.type === "bar" && (
-        <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={topicData.bar} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={topicData.bar} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip
-              contentStyle={{ fontSize: 12, borderRadius: 8 }}
-              formatter={(val) => [val.toLocaleString(), topicData.barLabel]}
-            />
+            <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} formatter={v => [v.toLocaleString(), topicData.barLabel]} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} name={topicData.barLabel} />
             <Bar dataKey="value2" fill="#10b981" radius={[4, 4, 0, 0]} name="เปรียบเทียบ" />
           </BarChart>
         </ResponsiveContainer>
       )}
-
       {chart.type === "line" && (
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={topicData.line} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={topicData.line} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Line
-              type="monotone"
-              dataKey="actual"
-              stroke="#3b82f6"
-              strokeWidth={2}
-              dot={{ r: 4 }}
-              name="ค่าจริง"
-            />
-            <Line
-              type="monotone"
-              dataKey="budget"
-              stroke="#f59e0b"
-              strokeWidth={2}
-              strokeDasharray="5 5"
-              dot={{ r: 3 }}
-              name="เป้าหมาย"
-            />
+            <Line type="monotone" dataKey="actual" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3 }} name="ค่าจริง" />
+            <Line type="monotone" dataKey="budget" stroke="#f59e0b" strokeWidth={2} strokeDasharray="5 5" dot={{ r: 3 }} name="เป้าหมาย" />
           </LineChart>
         </ResponsiveContainer>
       )}
-
       {chart.type === "pie" && (
-        <ResponsiveContainer width="100%" height={220}>
+        <ResponsiveContainer width="100%" height={200}>
           <PieChart>
-            <Pie
-              data={topicData.bar}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-              labelLine={false}
-            >
-              {topicData.bar.map((_, i) => (
-                <Cell key={i} fill={COLORS[i % COLORS.length]} />
-              ))}
+            <Pie data={topicData.bar} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75}
+              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
+              {topicData.bar.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
             </Pie>
             <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
           </PieChart>
         </ResponsiveContainer>
       )}
-
       {chart.type === "area" && (
-        <ResponsiveContainer width="100%" height={220}>
-          <AreaChart data={topicData.line} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+        <ResponsiveContainer width="100%" height={200}>
+          <AreaChart data={topicData.line} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
             <defs>
-              <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+              <linearGradient id="ga1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25} /><stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
               </linearGradient>
-              <linearGradient id="colorBudget" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+              <linearGradient id="ga2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.25} /><stop offset="95%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -396,45 +245,18 @@ function ChartCard({ chart, onDelete, topic, reportKey }) {
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Area
-              type="monotone"
-              dataKey="actual"
-              stroke="#3b82f6"
-              fill="url(#colorActual)"
-              strokeWidth={2}
-              name="ค่าจริง"
-            />
-            <Area
-              type="monotone"
-              dataKey="budget"
-              stroke="#10b981"
-              fill="url(#colorBudget)"
-              strokeWidth={2}
-              name="เป้าหมาย"
-            />
+            <Area type="monotone" dataKey="actual" stroke="#3b82f6" fill="url(#ga1)" strokeWidth={2} name="ค่าจริง" />
+            <Area type="monotone" dataKey="budget" stroke="#10b981" fill="url(#ga2)" strokeWidth={2} name="เป้าหมาย" />
           </AreaChart>
         </ResponsiveContainer>
       )}
-
       {chart.type === "radar" && (
-        <ResponsiveContainer width="100%" height={220}>
-          <RadarChart data={topicData.bar} cx="50%" cy="50%" outerRadius={80}>
+        <ResponsiveContainer width="100%" height={200}>
+          <RadarChart data={topicData.bar} cx="50%" cy="50%" outerRadius={75}>
             <PolarGrid stroke="#e5e7eb" />
-            <PolarAngleAxis dataKey="name" tick={{ fontSize: 11 }} />
-            <Radar
-              name="ค่าจริง"
-              dataKey="value"
-              stroke="#3b82f6"
-              fill="#3b82f6"
-              fillOpacity={0.3}
-            />
-            <Radar
-              name="เปรียบเทียบ"
-              dataKey="value2"
-              stroke="#10b981"
-              fill="#10b981"
-              fillOpacity={0.2}
-            />
+            <PolarAngleAxis dataKey="name" tick={{ fontSize: 10 }} />
+            <Radar name="ค่าจริง" dataKey="value" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
+            <Radar name="เปรียบเทียบ" dataKey="value2" stroke="#10b981" fill="#10b981" fillOpacity={0.2} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} />
           </RadarChart>
@@ -462,631 +284,390 @@ export default function SelfService() {
     { id: 2, type: "line", title: "กราฟเส้น — แนวโน้มรายเดือน" },
   ]);
   const [addChartType, setAddChartType] = useState("bar");
-  const [addXAxis, setAddXAxis] = useState("เดือน");
-  const [addYAxis, setAddYAxis] = useState("มูลค่า");
 
-  // Schedule state
+  // Alert & Schedule (right panel) state
+  const [alertEnabled, setAlertEnabled] = useState(false);
+  const [alertMetric, setAlertMetric] = useState(ALERT_METRICS[0]);
+  const [alertOperator, setAlertOperator] = useState(">");
+  const [alertValue, setAlertValue] = useState("");
+  const [alertChannel, setAlertChannel] = useState({ email: true, system: true });
+
+  const [scheduleEnabled, setScheduleEnabled] = useState(false);
   const [scheduleFreq, setScheduleFreq] = useState("รายสัปดาห์");
   const [scheduleEmail, setScheduleEmail] = useState("");
-  const [scheduleMsg, setScheduleMsg] = useState("");
 
-  const freqLabel = {
-    รายวัน: "วัน",
-    รายสัปดาห์: "สัปดาห์",
-    รายเดือน: "เดือน",
-  };
+  const [saveStatus, setSaveStatus] = useState(null); // null | 'success' | 'error'
+  const [scheduledList, setScheduledList] = useState(scheduledReports);
 
-  const handleProvinceToggle = (province) => {
-    setSelectedProvinces((prev) =>
-      prev.includes(province) ? prev.filter((p) => p !== province) : [...prev, province]
-    );
-  };
+  const handleProvinceToggle = p =>
+    setSelectedProvinces(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
 
   const handleReset = () => {
-    setSelectedTopic("การเงิน");
-    setSelectedProvinces([]);
-    setStartMonth("2567-01");
-    setEndMonth("2567-08");
-    setSelectedHospitalType("ทั้งหมด");
-    setSelectedRegion("ทั้งหมด");
+    setSelectedTopic("การเงิน"); setSelectedProvinces([]);
+    setStartMonth("2567-01"); setEndMonth("2567-08");
+    setSelectedHospitalType("ทั้งหมด"); setSelectedRegion("ทั้งหมด");
   };
 
-  const handleBuildReport = () => {
-    setReportKey((prev) => prev + 1);
-  };
-
-  const handleDeleteChart = (id) => {
-    setCharts((prev) => prev.filter((c) => c.id !== id));
-  };
+  const handleBuildReport = () => setReportKey(k => k + 1);
 
   const handleAddChart = () => {
-    alert(`เพิ่มกราฟ: ${addChartType} | แกน X: ${addXAxis} | แกน Y: ${addYAxis}`);
+    const titles = { bar: "กราฟแท่ง", line: "กราฟเส้น", pie: "กราฟวงกลม", area: "กราฟพื้นที่", radar: "กราฟเรดาร์" };
+    setCharts(prev => [...prev, { id: Date.now(), type: addChartType, title: `${titles[addChartType]} — ${selectedTopic}` }]);
   };
 
-  const handleSetSchedule = () => {
-    if (!scheduleEmail.trim()) {
-      alert("กรุณากรอกอีเมลผู้รับ");
+  const handleSave = () => {
+    if (scheduleEnabled && !scheduleEmail.trim()) {
+      setSaveStatus("error");
       return;
     }
-    setScheduleMsg(
-      `ตั้งค่าแล้ว ระบบจะส่งรายงานให้ทุก${freqLabel[scheduleFreq] || scheduleFreq}`
-    );
+    const freqLabel = { รายวัน: "วัน", รายสัปดาห์: "สัปดาห์", รายเดือน: "เดือน" };
+    if (scheduleEnabled) {
+      setScheduledList(prev => [{
+        id: Date.now(),
+        title: `รายงาน${selectedTopic} — ${selectedTopic}`,
+        frequency: scheduleFreq,
+        nextRun: "พรุ่งนี้",
+        recipients: [scheduleEmail],
+        format: "PDF",
+        status: "ใช้งาน",
+      }, ...prev]);
+    }
+    setSaveStatus("success");
+    setTimeout(() => setSaveStatus(null), 4000);
   };
 
-  // Reports section state
-  const [reportSearch, setReportSearch] = useState('');
-  const [reportCategory, setReportCategory] = useState('ทั้งหมด');
-  const [commentReport, setCommentReport] = useState(null);
-  const [newComment, setNewComment] = useState('');
-  const [commentsByReport, setCommentsByReport] = useState(mockComments);
-
-  const reportCategories = ['ทั้งหมด', 'การเงิน', 'พัสดุ', 'การรับรอง', 'นโยบาย'];
-  const filteredReports = reports.filter(r =>
-    (reportCategory === 'ทั้งหมด' || r.category === reportCategory) &&
-    (reportSearch === '' || r.title.toLowerCase().includes(reportSearch.toLowerCase()))
-  );
-  const getComments = (id) => commentsByReport[id] || [];
-  const addComment = (reportId) => {
-    if (!newComment.trim()) return;
-    setCommentsByReport(prev => ({
-      ...prev,
-      [reportId]: [...(prev[reportId] || []), { id: Date.now(), author: 'นายแพทย์ สมชาย ใจดี', time: 'เมื่อสักครู่', text: newComment.trim() }]
-    }));
-    setNewComment('');
-  };
+  const channels = [
+    { key: "email", label: "อีเมล", icon: Mail },
+    { key: "system", label: "แจ้งเตือนในระบบ", icon: Bell },
+  ];
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* ─── Builder Section Header ───────────────────────────────────────── */}
-      <div className="px-4 pt-4">
-        <h1 className="text-xl font-bold text-gray-900">สร้างรายงาน</h1>
-        <p className="text-sm text-gray-500 mt-0.5">Self-Service Analytics — สร้างและจัดการรายงานด้วยตนเอง</p>
+    <div className="flex flex-col gap-0 h-full">
+      {/* ─── Page Header ────────────────────────────────────────────────────── */}
+      <div className="px-6 py-4 border-b border-gray-100 bg-white flex items-center justify-between">
+        <div>
+          <h1 className="text-lg font-bold text-gray-900">สร้างรายงาน</h1>
+          <p className="text-xs text-gray-400 mt-0.5">Self-Service Analytics — กรองข้อมูล สร้างกราฟ และตั้งค่าการแจ้งเตือน</p>
+        </div>
+        {saveStatus === "success" && (
+          <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-xs font-medium px-3 py-2 rounded-xl">
+            <CheckCircle2 size={14} />
+            บันทึกการตั้งค่าเรียบร้อยแล้ว
+          </div>
+        )}
+        {saveStatus === "error" && (
+          <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-xs font-medium px-3 py-2 rounded-xl">
+            <AlertTriangle size={14} />
+            กรุณากรอกอีเมลผู้รับ
+          </div>
+        )}
       </div>
 
-      {/* ─── 3-Panel Builder ──────────────────────────────────────────────── */}
-      <div className="flex gap-4 px-4 min-h-[600px]">
-      {/* ─── Left Panel: Filters ──────────────────────────────────────────── */}
-      <aside className="w-[280px] flex-shrink-0 flex flex-col gap-4 overflow-y-auto">
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Settings size={16} className="text-blue-500" />
-            <h2 className="text-sm font-bold text-gray-700">ตัวกรองข้อมูล</h2>
-          </div>
+      {/* ─── 3-Panel Layout ─────────────────────────────────────────────────── */}
+      <div className="flex flex-1 gap-0 min-h-0 overflow-hidden">
 
-          {/* Topic */}
-          <div className="mb-4">
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
-              เลือกหัวข้อ
-            </label>
-            <select
-              value={selectedTopic}
-              onChange={(e) => setSelectedTopic(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
-            >
-              <option>การเงิน</option>
-              <option>พัสดุ</option>
-              <option>การรับรอง</option>
-              <option>นโยบาย</option>
+        {/* LEFT: Filters */}
+        <aside className="w-60 flex-shrink-0 border-r border-gray-100 bg-white overflow-y-auto p-4 flex flex-col gap-4">
+          <div>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">ตัวกรองข้อมูล</p>
+
+            <label className="block text-xs font-medium text-gray-600 mb-1">หัวข้อ</label>
+            <select value={selectedTopic} onChange={e => setSelectedTopic(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 bg-white mb-3">
+              <option>การเงิน</option><option>พัสดุ</option><option>การรับรอง</option><option>นโยบาย</option>
             </select>
-          </div>
 
-          {/* Provinces */}
-          <div className="mb-4">
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
-              จังหวัด
-            </label>
-            <div className="grid grid-cols-1 gap-1 max-h-48 overflow-y-auto pr-1">
-              {PROVINCES.map((prov) => (
-                <label key={prov} className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    checked={selectedProvinces.includes(prov)}
-                    onChange={() => handleProvinceToggle(prov)}
-                    className="w-3.5 h-3.5 text-blue-500 rounded border-gray-300 focus:ring-blue-300"
-                  />
-                  <span className="text-xs text-gray-600 group-hover:text-gray-900 transition-colors">
-                    {prov}
-                  </span>
+            <label className="block text-xs font-medium text-gray-600 mb-1">ภาค</label>
+            <select value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 bg-white mb-3">
+              <option>ทั้งหมด</option><option>เหนือ</option><option>กลาง</option>
+              <option>อีสาน</option><option>ใต้</option><option>ตะวันตก</option><option>กทม.</option>
+            </select>
+
+            <label className="block text-xs font-medium text-gray-600 mb-1">ประเภทโรงพยาบาล</label>
+            <select value={selectedHospitalType} onChange={e => setSelectedHospitalType(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 bg-white mb-3">
+              <option>ทั้งหมด</option><option>รพ.ทั่วไป</option><option>รพ.ชุมชน</option><option>รพ.เอกชน</option>
+            </select>
+
+            <label className="block text-xs font-medium text-gray-600 mb-1">ช่วงเวลา</label>
+            <div className="flex gap-2 mb-3">
+              <input type="month" value={startMonth} onChange={e => setStartMonth(e.target.value)}
+                className="flex-1 border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20" />
+              <input type="month" value={endMonth} onChange={e => setEndMonth(e.target.value)}
+                className="flex-1 border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20" />
+            </div>
+
+            <label className="block text-xs font-medium text-gray-600 mb-1.5">จังหวัด</label>
+            <div className="space-y-1 max-h-36 overflow-y-auto pr-0.5 mb-4">
+              {PROVINCES.map(p => (
+                <label key={p} className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={selectedProvinces.includes(p)} onChange={() => handleProvinceToggle(p)}
+                    className="w-3.5 h-3.5 rounded border-gray-300 text-[#0D5C8F] focus:ring-[#0D5C8F]/20" />
+                  <span className="text-xs text-gray-600">{p}</span>
                 </label>
               ))}
             </div>
             {selectedProvinces.length > 0 && (
-              <p className="text-xs text-blue-500 mt-1">เลือก {selectedProvinces.length} จังหวัด</p>
+              <p className="text-[11px] text-[#0D5C8F] mb-2">เลือก {selectedProvinces.length} จังหวัด</p>
             )}
           </div>
 
-          {/* Date Range */}
-          <div className="mb-4">
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
-              ช่วงเวลา
-            </label>
-            <div className="flex flex-col gap-2">
-              <div>
-                <span className="text-xs text-gray-400 mb-0.5 block">เริ่มต้น</span>
-                <input
-                  type="month"
-                  value={startMonth}
-                  onChange={(e) => setStartMonth(e.target.value)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                />
-              </div>
-              <div>
-                <span className="text-xs text-gray-400 mb-0.5 block">สิ้นสุด</span>
-                <input
-                  type="month"
-                  value={endMonth}
-                  onChange={(e) => setEndMonth(e.target.value)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Hospital Type */}
-          <div className="mb-4">
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
-              ประเภทโรงพยาบาล
-            </label>
-            <select
-              value={selectedHospitalType}
-              onChange={(e) => setSelectedHospitalType(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
-            >
-              <option>ทั้งหมด</option>
-              <option>รพ.ทั่วไป</option>
-              <option>รพ.ชุมชน</option>
-              <option>รพ.เอกชน</option>
-            </select>
-          </div>
-
-          {/* Region */}
-          <div className="mb-5">
-            <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
-              ภาค
-            </label>
-            <select
-              value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
-            >
-              <option>ทั้งหมด</option>
-              <option>เหนือ</option>
-              <option>กลาง</option>
-              <option>อีสาน</option>
-              <option>ใต้</option>
-              <option>ตะวันตก</option>
-              <option>กทม.</option>
-            </select>
-          </div>
-
-          {/* Action Buttons */}
-          <button
-            onClick={handleBuildReport}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-2.5 rounded-lg transition-colors shadow-sm mb-2 flex items-center justify-center gap-2"
-          >
-            <BarChart2 size={15} />
-            สร้างรายงาน
-          </button>
-          <button
-            onClick={handleReset}
-            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold text-sm py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
-          >
-            <RefreshCw size={15} />
-            รีเซ็ต
-          </button>
-        </div>
-
-        {/* Active Filter Summary */}
-        <div className="bg-blue-50 rounded-xl border border-blue-100 p-3">
-          <p className="text-xs font-semibold text-blue-600 mb-2">ตัวกรองที่ใช้งาน</p>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs text-blue-700">หัวข้อ: {selectedTopic}</span>
-            <span className="text-xs text-blue-700">ประเภท รพ.: {selectedHospitalType}</span>
-            <span className="text-xs text-blue-700">ภาค: {selectedRegion}</span>
-            {selectedProvinces.length > 0 && (
-              <span className="text-xs text-blue-700">
-                จังหวัด: {selectedProvinces.slice(0, 2).join(", ")}
-                {selectedProvinces.length > 2 && ` +${selectedProvinces.length - 2}`}
-              </span>
-            )}
-            <span className="text-xs text-blue-700">
-              ช่วงเวลา: {startMonth} — {endMonth}
-            </span>
-          </div>
-        </div>
-      </aside>
-
-      {/* ─── Center Panel: Chart Builder ──────────────────────────────────── */}
-      <main className="flex-1 flex flex-col gap-4 overflow-y-auto min-w-0">
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <BarChart2 size={16} className="text-blue-500" />
-            <h2 className="text-sm font-bold text-gray-700">ตัวสร้างรายงาน</h2>
-            {reportKey > 0 && (
-              <span className="ml-auto text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-medium">
-                อัปเดตแล้ว #{reportKey}
-              </span>
-            )}
-          </div>
-
-          {/* Add Chart Row */}
-          <div className="flex flex-wrap items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-100">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs text-gray-500 font-medium whitespace-nowrap">ประเภทกราฟ:</span>
-              <select
-                value={addChartType}
-                onChange={(e) => setAddChartType(e.target.value)}
-                className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
-              >
-                <option value="bar">Bar</option>
-                <option value="line">Line</option>
-                <option value="pie">Pie</option>
-                <option value="area">Area</option>
-                <option value="radar">Radar</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs text-gray-500 font-medium whitespace-nowrap">แกน X:</span>
-              <select
-                value={addXAxis}
-                onChange={(e) => setAddXAxis(e.target.value)}
-                className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
-              >
-                <option>เดือน</option>
-                <option>หน่วยงาน</option>
-                <option>จังหวัด</option>
-                <option>ประเภท</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs text-gray-500 font-medium whitespace-nowrap">แกน Y:</span>
-              <select
-                value={addYAxis}
-                onChange={(e) => setAddYAxis(e.target.value)}
-                className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
-              >
-                <option>มูลค่า</option>
-                <option>จำนวน</option>
-                <option>คะแนน</option>
-                <option>อัตรา</option>
-              </select>
-            </div>
-            <button
-              onClick={handleAddChart}
-              className="ml-auto flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors shadow-sm"
-            >
-              <Plus size={13} />
-              เพิ่มกราฟ
+          <div className="flex flex-col gap-2 mt-auto">
+            <button onClick={handleBuildReport}
+              className="w-full bg-[#0D5C8F] hover:bg-[#0a4a73] text-white font-semibold text-sm py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+              <BarChart2 size={15} />
+              สร้างรายงาน
+            </button>
+            <button onClick={handleReset}
+              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium text-sm py-2 rounded-xl transition-colors flex items-center justify-center gap-2">
+              <RefreshCw size={14} />
+              รีเซ็ต
             </button>
           </div>
-        </div>
 
-        {/* Chart Canvas */}
-        {charts.length === 0 ? (
-          <div className="bg-white rounded-xl border border-dashed border-gray-300 p-12 flex flex-col items-center justify-center text-center">
-            <BarChart2 size={40} className="text-gray-300 mb-3" />
-            <p className="text-sm text-gray-400 font-medium">ไม่มีกราฟในขณะนี้</p>
-            <p className="text-xs text-gray-400 mt-1">กด "เพิ่มกราฟ" เพื่อสร้างกราฟใหม่</p>
+          {/* Active filter badge */}
+          <div className="bg-[#0D5C8F]/5 rounded-xl p-3 text-[11px] space-y-1 border border-[#0D5C8F]/10">
+            <p className="font-semibold text-[#0D5C8F] mb-1.5">ตัวกรองที่ใช้</p>
+            <p className="text-gray-600">หัวข้อ: <span className="font-medium text-gray-800">{selectedTopic}</span></p>
+            <p className="text-gray-600">ภาค: <span className="font-medium text-gray-800">{selectedRegion}</span></p>
+            <p className="text-gray-600">ประเภท: <span className="font-medium text-gray-800">{selectedHospitalType}</span></p>
+            <p className="text-gray-600">ช่วงเวลา: <span className="font-medium text-gray-800">{startMonth} – {endMonth}</span></p>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-            {charts.map((chart) => (
-              <ChartCard
-                key={`${chart.id}-${reportKey}`}
-                chart={chart}
-                onDelete={() => handleDeleteChart(chart.id)}
-                topic={selectedTopic}
-                reportKey={reportKey}
-              />
-            ))}
-          </div>
-        )}
+        </aside>
 
-        {/* Data Summary Strip */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <p className="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wide">
-            สรุปข้อมูลจากตัวกรอง
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { label: "โรงพยาบาลทั้งหมด", value: "1,247" },
-              { label: "ข้อมูลที่ตรงเงื่อนไข", value: "863" },
-              { label: "ช่วงเวลา (เดือน)", value: "8" },
-              { label: "ค่าเฉลี่ยรวม", value: "84.2%" },
-            ].map((item) => (
-              <div key={item.label} className="bg-gray-50 rounded-lg p-3 text-center">
-                <p className="text-lg font-bold text-blue-600">{item.value}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{item.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-
-      {/* ─── Right Panel: Export & Schedule ──────────────────────────────── */}
-      <aside className="w-[220px] flex-shrink-0 flex flex-col gap-4 overflow-y-auto">
-        {/* Export */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Download size={15} className="text-blue-500" />
-            <h3 className="text-xs font-bold text-gray-700">ส่งออกรายงาน</h3>
-          </div>
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={() => alert("กำลังส่งออก PDF...")}
-              className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-xs py-2.5 rounded-lg transition-colors border border-red-100"
-            >
-              <FileText size={14} />
-              ส่งออก PDF
-            </button>
-            <button
-              onClick={() => alert("กำลังส่งออก CSV...")}
-              className="w-full flex items-center justify-center gap-2 bg-green-50 hover:bg-green-100 text-green-600 font-semibold text-xs py-2.5 rounded-lg transition-colors border border-green-100"
-            >
-              <Download size={14} />
-              ส่งออก CSV
-            </button>
-          </div>
-        </div>
-
-        {/* Auto Schedule */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Clock size={15} className="text-blue-500" />
-            <h3 className="text-xs font-bold text-gray-700">กำหนดการส่งอัตโนมัติ</h3>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">ความถี่</label>
-              <select
-                value={scheduleFreq}
-                onChange={(e) => setScheduleFreq(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-2.5 py-2 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
-              >
-                <option>รายวัน</option>
-                <option>รายสัปดาห์</option>
-                <option>รายเดือน</option>
+        {/* CENTER: Chart Builder */}
+        <main className="flex-1 overflow-y-auto bg-[#F0F4F8] p-4 flex flex-col gap-4 min-w-0">
+          {/* Add chart row */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold text-gray-500">เพิ่มกราฟ:</span>
+              <select value={addChartType} onChange={e => setAddChartType(e.target.value)}
+                className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20">
+                <option value="bar">Bar — แท่ง</option>
+                <option value="line">Line — เส้น</option>
+                <option value="pie">Pie — วงกลม</option>
+                <option value="area">Area — พื้นที่</option>
+                <option value="radar">Radar — เรดาร์</option>
               </select>
-            </div>
-            <div>
-              <label className="block text-xs text-gray-500 mb-1">อีเมลผู้รับ</label>
-              <input
-                type="email"
-                placeholder="example@email.com"
-                value={scheduleEmail}
-                onChange={(e) => setScheduleEmail(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-2.5 py-2 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-300"
-              />
-            </div>
-            <button
-              onClick={handleSetSchedule}
-              className="w-full flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs py-2.5 rounded-lg transition-colors shadow-sm"
-            >
-              <Mail size={13} />
-              ตั้งค่าการส่งอัตโนมัติ
-            </button>
-
-            {scheduleMsg && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-2.5">
-                <p className="text-xs text-green-700 font-medium leading-relaxed">{scheduleMsg}</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Saved Reports */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Save size={15} className="text-blue-500" />
-            <h3 className="text-xs font-bold text-gray-700">รายงานที่บันทึกไว้</h3>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            {SAVED_REPORTS.map((report) => (
-              <div
-                key={report.id}
-                className="bg-gray-50 rounded-lg border border-gray-100 p-3 hover:border-blue-200 hover:bg-blue-50/30 transition-colors"
-              >
-                <p className="text-xs font-semibold text-gray-700 leading-snug mb-1">
-                  {report.name}
-                </p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="inline-block text-[10px] bg-blue-100 text-blue-600 rounded px-1.5 py-0.5 font-medium mb-1">
-                      {report.topic}
-                    </span>
-                    <p className="text-[10px] text-gray-400">{report.lastRun}</p>
-                  </div>
-                  <button
-                    onClick={() => alert(`กำลังโหลดรายงาน: ${report.name}`)}
-                    className="text-[11px] font-semibold text-blue-600 hover:text-blue-800 bg-white hover:bg-blue-50 border border-blue-200 rounded-md px-2 py-1 transition-colors"
-                  >
-                    โหลด
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-4 text-white">
-          <p className="text-xs font-bold mb-3 opacity-90">สถิติการใช้งาน</p>
-          <div className="flex flex-col gap-2">
-            {[
-              { label: "รายงานทั้งหมด", value: "47" },
-              { label: "ส่งออกเดือนนี้", value: "12" },
-              { label: "กราฟที่สร้าง", value: "89" },
-            ].map((item) => (
-              <div key={item.label} className="flex justify-between items-center">
-                <span className="text-xs opacity-75">{item.label}</span>
-                <span className="text-sm font-bold">{item.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </aside>
-      </div>{/* end 3-panel */}
-
-      {/* ─── Reports Section ──────────────────────────────────────────────── */}
-      <div className="px-4 pb-6 space-y-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-bold text-gray-900">รายงานทั้งหมด</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Reports Management — {reports.length} รายงาน</p>
-          </div>
-        </div>
-
-        {/* Search + Filter */}
-        <div className="flex flex-wrap gap-3 items-center">
-          <div className="relative flex-1 min-w-[200px] max-w-md">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              value={reportSearch}
-              onChange={e => setReportSearch(e.target.value)}
-              placeholder="ค้นหารายงาน..."
-              className="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 focus:border-[#0D5C8F] shadow-sm"
-            />
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            {reportCategories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setReportCategory(cat)}
-                className={`px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                  reportCategory === cat
-                    ? 'bg-[#0D5C8F] text-white'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:border-[#0D5C8F]/40'
-                }`}
-              >
-                {cat}
+              <button onClick={handleAddChart}
+                className="flex items-center gap-1.5 bg-[#0D5C8F] hover:bg-[#0a4a73] text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">
+                <Plus size={13} />
+                เพิ่มกราฟ
               </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Report Grid */}
-        <div>
-          <p className="text-xs text-gray-400 mb-3">แสดง {filteredReports.length} รายงาน</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-            {filteredReports.map(report => {
-              const Icon = categoryIcons[report.category] || BarChart2;
-              const reportComments = getComments(report.id);
-              return (
-                <div key={report.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="p-2 bg-gray-50 rounded-lg">
-                        <Icon size={16} className="text-gray-500" />
-                      </div>
-                      <span className={`badge text-[10px] ${categoryColors[report.category] || 'bg-gray-100 text-gray-600'}`}>
-                        {report.category}
-                      </span>
-                    </div>
-                    <span className="badge bg-gray-100 text-gray-500 text-[10px]">{report.format}</span>
-                  </div>
-                  <h3 className="text-sm font-semibold text-gray-800 mb-2 leading-snug line-clamp-2">{report.title}</h3>
-                  <div className="flex items-center gap-1 text-[11px] text-gray-400 mb-3">
-                    <Clock size={11} />
-                    อัปเดต {report.lastUpdated}
-                  </div>
-                  <div className="flex items-center justify-between border-t border-gray-50 pt-3">
-                    <span className="text-xs text-gray-400">{report.views} ครั้ง</span>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => setCommentReport(commentReport === report.id ? null : report.id)}
-                        className="flex items-center gap-1 text-xs text-gray-400 hover:text-[#0D5C8F] transition-colors p-1.5 rounded-lg hover:bg-blue-50"
-                      >
-                        <MessageSquare size={13} />
-                        <span>{reportComments.length}</span>
-                      </button>
-                      <button className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-[#0D5C8F] transition-colors" title="แชร์">
-                        <Share2 size={13} />
-                      </button>
-                      <button className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-[#0D5C8F] transition-colors" title="ดาวน์โหลด">
-                        <Download size={13} />
-                      </button>
-                    </div>
-                  </div>
-                  {commentReport === report.id && (
-                    <div className="mt-3 pt-3 border-t border-gray-100">
-                      <div className="space-y-2.5 max-h-40 overflow-y-auto mb-3">
-                        {reportComments.length === 0 ? (
-                          <p className="text-xs text-gray-400 text-center py-2">ยังไม่มีความคิดเห็น</p>
-                        ) : (
-                          reportComments.map(c => (
-                            <div key={c.id} className="bg-gray-50 rounded-lg p-2.5">
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs font-semibold text-gray-700">{c.author}</span>
-                                <span className="text-[10px] text-gray-400">{c.time}</span>
-                              </div>
-                              <p className="text-xs text-gray-600 leading-relaxed">{c.text}</p>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={newComment}
-                          onChange={e => setNewComment(e.target.value)}
-                          onKeyDown={e => e.key === 'Enter' && addComment(report.id)}
-                          placeholder="เขียนความคิดเห็น..."
-                          className="flex-1 text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20"
-                        />
-                        <button
-                          onClick={() => addComment(report.id)}
-                          className="p-2 bg-[#0D5C8F] text-white rounded-lg hover:bg-[#0a4a73] transition-colors"
-                        >
-                          <Send size={12} />
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Scheduled Reports */}
-        <div className="chart-card">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-                <Calendar size={15} className="text-[#0D5C8F]" />
-                รายงานอัตโนมัติ
-              </h3>
-              <p className="text-xs text-gray-400 mt-0.5">ตั้งเวลาส่งรายงานอัตโนมัติ</p>
+              {reportKey > 0 && (
+                <span className="ml-auto text-[11px] bg-green-100 text-green-600 px-2 py-1 rounded-full font-medium">
+                  ✓ อัปเดตแล้ว #{reportKey}
+                </span>
+              )}
             </div>
-            <button className="btn-primary text-xs">+ เพิ่มตารางรายงาน</button>
           </div>
-          <div className="space-y-2">
-            {scheduledReports.map(sr => (
-              <div key={sr.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                <div className={`p-2 rounded-lg ${sr.status === 'ใช้งาน' ? 'bg-green-100' : 'bg-gray-200'}`}>
-                  <Clock size={14} className={sr.status === 'ใช้งาน' ? 'text-green-600' : 'text-gray-500'} />
+
+          {/* Charts canvas */}
+          {charts.length === 0 ? (
+            <div className="bg-white rounded-xl border border-dashed border-gray-300 flex flex-col items-center justify-center py-20 text-center">
+              <BarChart2 size={36} className="text-gray-300 mb-3" />
+              <p className="text-sm text-gray-400 font-medium">ยังไม่มีกราฟ</p>
+              <p className="text-xs text-gray-400 mt-1">กด "เพิ่มกราฟ" ด้านบน</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              {charts.map(chart => (
+                <ChartCard key={`${chart.id}-${reportKey}`} chart={chart}
+                  onDelete={() => setCharts(prev => prev.filter(c => c.id !== chart.id))}
+                  topic={selectedTopic} reportKey={reportKey} />
+              ))}
+            </div>
+          )}
+
+          {/* Summary strip */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">สรุปข้อมูล</p>
+            <div className="grid grid-cols-4 gap-3">
+              {[
+                { label: "โรงพยาบาลทั้งหมด", value: "1,247" },
+                { label: "ตรงเงื่อนไข", value: "863" },
+                { label: "ช่วงเวลา (เดือน)", value: "8" },
+                { label: "ค่าเฉลี่ยรวม", value: "84.2%" },
+              ].map(item => (
+                <div key={item.label} className="bg-gray-50 rounded-lg p-3 text-center">
+                  <p className="text-base font-bold text-[#0D5C8F]">{item.value}</p>
+                  <p className="text-[11px] text-gray-500 mt-0.5">{item.label}</p>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">{sr.title}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    {sr.frequency} — ครั้งต่อไป: {sr.nextRun} — รับ: {sr.recipients.join(', ')}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="badge bg-blue-100 text-blue-700 text-[10px]">{sr.format}</span>
-                  <span className={`badge text-[10px] ${sr.status === 'ใช้งาน' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                    {sr.status}
-                  </span>
-                  <button className="text-xs text-gray-400 hover:text-red-500 transition-colors p-1">
-                    <X size={13} />
-                  </button>
-                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+
+        {/* RIGHT: Alert & Schedule */}
+        <aside className="w-64 flex-shrink-0 border-l border-gray-100 bg-white overflow-y-auto flex flex-col">
+          <div className="p-4 border-b border-gray-100">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">ส่งออกและแจ้งเตือน</p>
+          </div>
+
+          <div className="flex-1 p-4 flex flex-col gap-5">
+            {/* Export */}
+            <div>
+              <p className="text-xs font-semibold text-gray-600 mb-2 flex items-center gap-1.5">
+                <Download size={13} className="text-gray-400" />
+                ส่งออกรายงาน
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <button onClick={() => alert("กำลังส่งออก PDF...")}
+                  className="flex items-center justify-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-xs py-2 rounded-lg border border-red-100 transition-colors">
+                  <FileText size={13} />
+                  PDF
+                </button>
+                <button onClick={() => alert("กำลังส่งออก CSV...")}
+                  className="flex items-center justify-center gap-1.5 bg-green-50 hover:bg-green-100 text-green-600 font-semibold text-xs py-2 rounded-lg border border-green-100 transition-colors">
+                  <Download size={13} />
+                  CSV
+                </button>
               </div>
-            ))}
+            </div>
+
+            <div className="border-t border-gray-100" />
+
+            {/* Alert condition */}
+            <div className="space-y-3">
+              <Toggle
+                enabled={alertEnabled}
+                onChange={setAlertEnabled}
+                label="เปิดการแจ้งเตือน"
+                description="แจ้งเตือนเมื่อข้อมูลถึงเกณฑ์ที่กำหนด"
+              />
+
+              {alertEnabled && (
+                <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 space-y-2.5">
+                  <p className="text-[11px] font-semibold text-amber-700 flex items-center gap-1">
+                    <Bell size={11} />
+                    เงื่อนไข
+                  </p>
+                  <div className="space-y-2">
+                    <div>
+                      <label className="text-[10px] text-gray-500 block mb-1">ตัวชี้วัด</label>
+                      <select value={alertMetric} onChange={e => setAlertMetric(e.target.value)}
+                        className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-amber-200">
+                        {ALERT_METRICS.map(m => <option key={m}>{m}</option>)}
+                      </select>
+                    </div>
+                    <div className="flex gap-2">
+                      <select value={alertOperator} onChange={e => setAlertOperator(e.target.value)}
+                        className="w-16 border border-gray-200 rounded-lg px-2 py-1.5 text-xs bg-white font-mono focus:outline-none focus:ring-2 focus:ring-amber-200">
+                        <option>{">"}</option><option>{"<"}</option>
+                        <option>{"="}</option><option>{">="}</option><option>{"<="}</option>
+                      </select>
+                      <input type="number" value={alertValue} onChange={e => setAlertValue(e.target.value)}
+                        placeholder="ค่าเกณฑ์" className="flex-1 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-amber-200" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-gray-500 block mb-1.5">แจ้งเตือนผ่าน</label>
+                    <div className="space-y-1.5">
+                      {channels.map(ch => (
+                        <label key={ch.key} className="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" checked={alertChannel[ch.key]}
+                            onChange={() => setAlertChannel(prev => ({ ...prev, [ch.key]: !prev[ch.key] }))}
+                            className="w-3.5 h-3.5 rounded border-gray-300 text-[#0D5C8F] focus:ring-[#0D5C8F]/20" />
+                          <ch.icon size={11} className="text-gray-400" />
+                          <span className="text-xs text-gray-600">{ch.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-gray-100" />
+
+            {/* Auto schedule */}
+            <div className="space-y-3">
+              <Toggle
+                enabled={scheduleEnabled}
+                onChange={setScheduleEnabled}
+                label="ส่งออกอัตโนมัติ"
+                description="ส่งรายงานทางอีเมลตามกำหนด"
+              />
+
+              {scheduleEnabled && (
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 space-y-2.5">
+                  <p className="text-[11px] font-semibold text-blue-700 flex items-center gap-1">
+                    <Calendar size={11} />
+                    กำหนดการส่ง
+                  </p>
+                  <div>
+                    <label className="text-[10px] text-gray-500 block mb-1">ความถี่</label>
+                    <div className="flex gap-1">
+                      {["รายวัน", "รายสัปดาห์", "รายเดือน"].map(f => (
+                        <button key={f} onClick={() => setScheduleFreq(f)}
+                          className={`flex-1 py-1.5 text-[11px] font-medium rounded-lg transition-colors border ${
+                            scheduleFreq === f
+                              ? "bg-[#0D5C8F] text-white border-[#0D5C8F]"
+                              : "bg-white text-gray-500 border-gray-200 hover:border-[#0D5C8F]/40"
+                          }`}>
+                          {f.replace("ราย", "")}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-gray-500 block mb-1">อีเมลผู้รับ</label>
+                    <input type="email" value={scheduleEmail} onChange={e => setScheduleEmail(e.target.value)}
+                      placeholder="example@hai.go.th"
+                      className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-200 placeholder-gray-300" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Save button */}
+            {(alertEnabled || scheduleEnabled) && (
+              <button onClick={handleSave}
+                className="w-full bg-[#0D5C8F] hover:bg-[#0a4a73] text-white font-semibold text-xs py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm">
+                <Save size={13} />
+                บันทึกการตั้งค่า
+              </button>
+            )}
           </div>
+        </aside>
+      </div>
+
+      {/* ─── Scheduled Reports ────────────────────────────────────────────────── */}
+      <div className="border-t border-gray-100 bg-white px-6 py-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Clock size={14} className="text-[#0D5C8F]" />
+          <h3 className="text-sm font-semibold text-gray-800">รายงานอัตโนมัติที่ตั้งไว้</h3>
+          <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+            {scheduledList.filter(s => s.status === "ใช้งาน").length} ใช้งาน
+          </span>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-1">
+          {scheduledList.map(sr => (
+            <div key={sr.id} className="flex-shrink-0 w-64 flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-[#0D5C8F]/20 transition-colors">
+              <div className={`p-2 rounded-lg flex-shrink-0 ${sr.status === "ใช้งาน" ? "bg-green-100" : "bg-gray-200"}`}>
+                <Clock size={13} className={sr.status === "ใช้งาน" ? "text-green-600" : "text-gray-500"} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-gray-800 truncate">{sr.title}</p>
+                <p className="text-[10px] text-gray-400 mt-0.5 truncate">
+                  {sr.frequency} · {sr.recipients?.[0] || "—"}
+                </p>
+              </div>
+              <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${sr.status === "ใช้งาน" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                  {sr.status}
+                </span>
+                <button onClick={() => setScheduledList(prev => prev.filter(x => x.id !== sr.id))}
+                  className="text-gray-300 hover:text-red-400 transition-colors">
+                  <X size={12} />
+                </button>
+              </div>
+            </div>
+          ))}
+          {scheduledList.length === 0 && (
+            <p className="text-xs text-gray-400 py-2">ยังไม่มีรายงานอัตโนมัติ — ตั้งค่าด้านบนแล้วกด "บันทึกการตั้งค่า"</p>
+          )}
         </div>
       </div>
     </div>

@@ -36,7 +36,7 @@ const navItems = [
   {
     group: 'Self-Service',
     items: [
-      { path: '/self-service', icon: PlusSquare, label: 'สร้างรายงาน', labelEn: 'Self-Service' },
+      { path: '/report', icon: PlusSquare, label: 'สร้างรายงาน', labelEn: 'Report' },
     ]
   },
   {
