@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { Bell, Plus, Trash2, Mail, MessageSquare, Clock, AlertTriangle, CheckCircle, Info } from 'lucide-react'
+import { Bell, Plus, Trash2, Mail, Clock, AlertTriangle, Info } from 'lucide-react'
 
 const initialAlerts = [
   { id: 1, metric: 'คะแนน HA เฉลี่ย', condition: '<', threshold: 75, channel: 'email', active: true, createdAt: '01/06/2567' },
   { id: 2, metric: 'งบประมาณที่ใช้', condition: '>', threshold: 90, channel: 'email', active: true, createdAt: '15/05/2567' },
-  { id: 3, metric: 'คำขอจัดซื้อค้าง', condition: '>', threshold: 200, channel: 'sms', active: false, createdAt: '10/05/2567' },
+  { id: 3, metric: 'คำขอจัดซื้อค้าง', condition: '>', threshold: 200, channel: 'email', active: false, createdAt: '10/05/2567' },
   { id: 4, metric: 'โรงพยาบาลใบรับรองหมดอายุ', condition: '>', threshold: 10, channel: 'email', active: true, createdAt: '05/05/2567' },
   { id: 5, metric: 'ผู้ใช้งานออนไลน์', condition: '>', threshold: 150, channel: 'email', active: false, createdAt: '01/05/2567' },
 ]
@@ -15,7 +15,7 @@ const alertHistory = [
   { id: 3, metric: 'คะแนน HA เฉลี่ย', value: 73.8, threshold: 75, triggered: '10/06/2567 14:42', channel: 'email', type: 'warning', sentTo: 'admin@hai.go.th' },
   { id: 4, metric: 'โรงพยาบาลใบรับรองหมดอายุ', value: 12, threshold: 10, triggered: '08/06/2567 08:00', channel: 'email', type: 'info', sentTo: 'quality@hai.go.th' },
   { id: 5, metric: 'งบประมาณที่ใช้', value: 91.5, threshold: 90, triggered: '05/06/2567 15:30', channel: 'email', type: 'critical', sentTo: 'finance@hai.go.th' },
-  { id: 6, metric: 'คำขอจัดซื้อค้าง', value: 215, threshold: 200, triggered: '03/06/2567 11:00', channel: 'sms', type: 'warning', sentTo: '+66-81-234-5678' },
+  { id: 6, metric: 'คำขอจัดซื้อค้าง', value: 215, threshold: 200, triggered: '03/06/2567 11:00', channel: 'email', type: 'warning', sentTo: 'procurement@hai.go.th' },
 ]
 
 const metrics = [
@@ -47,8 +47,8 @@ const pinnedAlerts = [
   {
     id: 'pinned-2',
     label: 'Budget Utilization > 85%',
-    channels: 'Email / LINE',
-    channelColor: 'bg-green-100 text-green-700',
+    channels: 'Email',
+    channelColor: 'bg-blue-100 text-blue-700',
     description: 'แจ้งเตือนเมื่ออัตราการใช้งบประมาณเกิน 85% ของวงเงินที่ได้รับ',
   },
 ]
@@ -146,8 +146,8 @@ export default function Alerts() {
             className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20 bg-white"
           >
             <option value="email">Email</option>
-            <option value="sms">SMS</option>
-            <option value="line">LINE</option>
+            <option value="system">แจ้งเตือนในระบบ</option>
+            <option value="both">Email + แจ้งเตือนในระบบ</option>
           </select>
           <button
             type="submit"
@@ -207,9 +207,8 @@ export default function Alerts() {
                   className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20"
                 >
                   <option value="email">อีเมล</option>
-                  <option value="sms">SMS</option>
-                  <option value="line">LINE</option>
-                  <option value="both">อีเมล + SMS</option>
+                  <option value="system">แจ้งเตือนในระบบ</option>
+                  <option value="both">อีเมล + แจ้งเตือนในระบบ</option>
                 </select>
               </div>
             </div>
@@ -257,14 +256,14 @@ export default function Alerts() {
           {alerts.map(alert => (
             <div key={alert.id} className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${alert.active ? 'bg-blue-50/40 border-blue-100' : 'bg-gray-50 border-gray-100 opacity-60'}`}>
               <div className={`p-2 rounded-lg ${alert.active ? 'bg-[#0D5C8F] text-white' : 'bg-gray-200 text-gray-500'}`}>
-                {alert.channel === 'email' ? <Mail size={16} /> : alert.channel === 'line' ? <MessageSquare size={16} /> : <MessageSquare size={16} />}
+                {alert.channel === 'email' || alert.channel === 'both' ? <Mail size={16} /> : <Bell size={16} />}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-800">
                   {alert.metric} <span className="font-mono text-[#0D5C8F]">{alert.condition}</span> {alert.threshold}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  ช่องทาง: {alert.channel === 'email' ? 'อีเมล' : alert.channel === 'sms' ? 'SMS' : alert.channel === 'line' ? 'LINE' : 'อีเมล + SMS'} — สร้าง {alert.createdAt}
+                  ช่องทาง: {alert.channel === 'email' ? 'อีเมล' : alert.channel === 'system' ? 'แจ้งเตือนในระบบ' : 'อีเมล + แจ้งเตือนในระบบ'} — สร้าง {alert.createdAt}
                 </p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
