@@ -13,7 +13,6 @@ import Admin from './pages/Admin'
 import Settings from './pages/Settings'
 import SelfService from './pages/SelfService'
 import DataPrep from './pages/DataPrep'
-import DataModeling from './pages/DataModeling'
 
 function ProtectedRoute({ children }) {
   const user = localStorage.getItem('hai_user')
@@ -24,7 +23,11 @@ function ProtectedRoute({ children }) {
 }
 
 function App() {
-  const [language, setLanguage] = useState('th')
+  const [language, setLanguage] = useState(() => localStorage.getItem('hai_language') || 'th')
+
+  useEffect(() => {
+    localStorage.setItem('hai_language', language)
+  }, [language])
 
   return (
     <BrowserRouter>
@@ -50,7 +53,6 @@ function App() {
           <Route path="admin" element={<Admin />} />
           <Route path="settings" element={<Settings />} />
           <Route path="data-prep" element={<DataPrep />} />
-          <Route path="data-modeling" element={<DataModeling />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

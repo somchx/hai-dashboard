@@ -10,6 +10,12 @@ import {
   Award, MapPin, Users, Star, MessageCircle, Send,
   Download, ChevronDown, TrendingUp
 } from "lucide-react";
+import {
+  DashboardFilterBar,
+  DashboardHeroCard,
+  DashboardPageHeader,
+  DashboardTabs,
+} from "../components/DashboardTheme";
 
 const PRIMARY = "#0D5C8F";
 const ACCENT = "#0EA5E9";
@@ -849,46 +855,112 @@ function TabHospitalQuality() {
 // ════════════════════════════════════════════════════════════════════════════
 
 const TABS = [
-  { id: "ha-cert", label: "การรับรอง HA" },
-  { id: "assessment", label: "ผลประเมิน" },
-  { id: "survey", label: "Survey" },
-  { id: "quality", label: "Hospital Quality" },
+  { id: "ha-cert", label: "การรับรอง HA", icon: Award },
+  { id: "assessment", label: "ผลประเมิน", icon: TrendingUp },
+  { id: "survey", label: "Survey", icon: MessageCircle },
+  { id: "quality", label: "Hospital Quality", icon: Users },
 ];
 
 export default function Accreditation() {
   const [activeTab, setActiveTab] = useState("ha-cert");
+  const [yearFrom, setYearFrom] = useState("2020");
+  const [yearTo, setYearTo] = useState("2025");
+  const [region, setRegion] = useState("ทุกภูมิภาค");
+  const [hospitalType, setHospitalType] = useState("ทุกประเภทโรงพยาบาล");
+  const today = new Date().toLocaleDateString("th-TH", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Page Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-1">
-          <Award size={28} style={{ color: PRIMARY }} />
-          <h1 className="text-2xl font-bold" style={{ color: PRIMARY }}>ระบบการรับรองคุณภาพโรงพยาบาล (HA)</h1>
-        </div>
-        <p className="text-sm text-gray-500 ml-10">Hospital Accreditation — ข้อมูล ณ วันที่ 17 มิถุนายน 2568</p>
-      </div>
-
-      {/* Date Filter Bar */}
-      <DateFilterBar />
-
-      {/* Sub-tabs */}
-      <div className="flex gap-1 mb-6 bg-white rounded-xl shadow p-1.5 w-fit">
-        {TABS.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className="px-5 py-2 rounded-lg text-sm font-medium transition-all"
-            style={
-              activeTab === tab.id
-                ? { backgroundColor: PRIMARY, color: "white" }
-                : { color: "#6B7280" }
+    <div className="min-h-screen bg-gray-50 p-4">
+      <DashboardHeroCard
+        header={
+          <DashboardPageHeader
+            icon={Award}
+            title="ระบบการรับรองคุณภาพโรงพยาบาล (HA)"
+            subtitle={`Hospital Accreditation Dashboard • ข้อมูล ณ วันที่ ${today}`}
+          />
+        }
+        filter={
+          <DashboardFilterBar
+            actions={
+              <>
+                <button
+                  type="button"
+                  className="rounded-lg bg-[#0EA5E9] px-3 py-1.5 text-sm font-medium text-white"
+                >
+                  กรอง
+                </button>
+                <button
+                  type="button"
+                  className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
+                  onClick={() => {
+                    setYearFrom("2020");
+                    setYearTo("2025");
+                    setRegion("ทุกภูมิภาค");
+                    setHospitalType("ทุกประเภทโรงพยาบาล");
+                  }}
+                >
+                  รีเซ็ต
+                </button>
+              </>
             }
           >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">ตั้งแต่</label>
+              <select
+                value={yearFrom}
+                onChange={(e) => setYearFrom(e.target.value)}
+                className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+              >
+                {["2020", "2021", "2022", "2023", "2024", "2025"].map((year) => (
+                  <option key={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">ถึง</label>
+              <select
+                value={yearTo}
+                onChange={(e) => setYearTo(e.target.value)}
+                className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+              >
+                {["2020", "2021", "2022", "2023", "2024", "2025"].map((year) => (
+                  <option key={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">ภูมิภาค</label>
+              <select
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+                className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+              >
+                {["ทุกภูมิภาค", "เหนือ", "กลาง", "อีสาน", "ใต้", "ตะวันตก", "กทม."].map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">ประเภท</label>
+              <select
+                value={hospitalType}
+                onChange={(e) => setHospitalType(e.target.value)}
+                className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+              >
+                {["ทุกประเภทโรงพยาบาล", "โรงพยาบาลศูนย์", "โรงพยาบาลทั่วไป", "โรงพยาบาลชุมชน"].map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
+            </div>
+          </DashboardFilterBar>
+        }
+      />
+
+      <DashboardTabs tabs={TABS} activeTab={activeTab} onChange={setActiveTab} />
 
       {/* Tab Content */}
       {activeTab === "ha-cert" && <TabHACert />}

@@ -9,6 +9,12 @@ import {
   ShoppingCart, FileText, Users, TrendingUp,
   Download, ChevronDown, Package
 } from "lucide-react";
+import {
+  DashboardFilterBar,
+  DashboardHeroCard,
+  DashboardPageHeader,
+  DashboardTabs,
+} from "../components/DashboardTheme";
 
 const PRIMARY = "#0D5C8F";
 const ACCENT = "#0EA5E9";
@@ -663,6 +669,11 @@ export default function Procurement() {
   const [dateTo, setDateTo] = useState("2024-12-31");
   const [fiscalYear, setFiscalYear] = useState("2567");
   const [quarter, setQuarter] = useState("");
+  const today = new Date().toLocaleDateString("th-TH", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   const renderTab = () => {
     switch (activeTab) {
@@ -676,120 +687,101 @@ export default function Procurement() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      {/* Page Header */}
-      <div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900">ระบบจัดการจัดซื้อจัดจ้าง</h1>
-          <p className="text-sm text-gray-500">Procurement Management Dashboard</p>
-        </div>
-        <ExportButton />
-      </div>
-
-      {/* Date Range Filter Bar */}
-      <div className="bg-white rounded-xl shadow p-3 mb-4 flex flex-wrap items-center gap-3">
-        <span className="text-sm font-medium text-gray-700">กรองข้อมูล:</span>
-
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-gray-500">ปีงบประมาณ</label>
-          <select
-            value={fiscalYear}
-            onChange={(e) => setFiscalYear(e.target.value)}
-            className="border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
-          >
-            <option value="2565">2565</option>
-            <option value="2566">2566</option>
-            <option value="2567">2567</option>
-            <option value="2568">2568</option>
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-gray-500">ตั้งแต่</label>
-          <input
-            type="date"
-            value={dateFrom}
-            onChange={(e) => setDateFrom(e.target.value)}
-            className="border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+      <DashboardHeroCard
+        header={
+          <DashboardPageHeader
+            icon={ShoppingCart}
+            title="ระบบจัดการจัดซื้อจัดจ้าง"
+            subtitle={`Procurement Management Dashboard • ข้อมูล ณ วันที่ ${today}`}
           />
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-gray-500">ถึง</label>
-          <input
-            type="date"
-            value={dateTo}
-            onChange={(e) => setDateTo(e.target.value)}
-            className="border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
-          />
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-gray-500">ไตรมาส</label>
-          <select
-            value={quarter}
-            onChange={(e) => setQuarter(e.target.value)}
-            className="border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+        }
+        filter={
+          <DashboardFilterBar
+            actions={
+              <>
+                <button
+                  className="rounded-lg bg-[#0EA5E9] px-3 py-1.5 text-sm font-medium text-white"
+                  style={{ backgroundColor: ACCENT }}
+                  onClick={() => {}}
+                  type="button"
+                >
+                  ค้นหา
+                </button>
+                <button
+                  className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
+                  onClick={() => {
+                    setDateFrom("2024-01-01");
+                    setDateTo("2024-12-31");
+                    setFiscalYear("2567");
+                    setQuarter("");
+                  }}
+                  type="button"
+                >
+                  รีเซ็ต
+                </button>
+              </>
+            }
           >
-            <option value="">ทั้งหมด</option>
-            <option value="Q1">Q1 (ต.ค. - ธ.ค.)</option>
-            <option value="Q2">Q2 (ม.ค. - มี.ค.)</option>
-            <option value="Q3">Q3 (เม.ย. - มิ.ย.)</option>
-            <option value="Q4">Q4 (ก.ค. - ก.ย.)</option>
-          </select>
-        </div>
-
-        <button
-          className="px-3 py-1.5 rounded-lg text-white text-sm font-medium"
-          style={{ backgroundColor: ACCENT }}
-          onClick={() => {}}
-        >
-          ค้นหา
-        </button>
-
-        <button
-          className="px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200 text-gray-600 hover:bg-gray-50"
-          onClick={() => {
-            setDateFrom("2024-01-01");
-            setDateTo("2024-12-31");
-            setFiscalYear("2567");
-            setQuarter("");
-          }}
-        >
-          รีเซ็ต
-        </button>
-      </div>
-
-      {/* Sub-Tab Navigation */}
-      <div className="bg-white rounded-xl shadow mb-4 overflow-hidden">
-        <div className="flex overflow-x-auto">
-          {TABS.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-5 py-3 text-sm font-medium whitespace-nowrap transition-all border-b-2 ${
-                  isActive
-                    ? "border-transparent text-white"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-                }`}
-                style={isActive ? { backgroundColor: PRIMARY } : {}}
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">ปีงบประมาณ</label>
+              <select
+                value={fiscalYear}
+                onChange={(e) => setFiscalYear(e.target.value)}
+                className="border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
               >
-                <Icon size={15} />
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+                <option value="2565">2565</option>
+                <option value="2566">2566</option>
+                <option value="2567">2567</option>
+                <option value="2568">2568</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">ตั้งแต่</label>
+              <input
+                type="date"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                className="border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">ถึง</label>
+              <input
+                type="date"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                className="border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">ไตรมาส</label>
+              <select
+                value={quarter}
+                onChange={(e) => setQuarter(e.target.value)}
+                className="border border-gray-200 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-sky-400"
+              >
+                <option value="">ทั้งหมด</option>
+                <option value="Q1">Q1 (ต.ค. - ธ.ค.)</option>
+                <option value="Q2">Q2 (ม.ค. - มี.ค.)</option>
+                <option value="Q3">Q3 (เม.ย. - มิ.ย.)</option>
+                <option value="Q4">Q4 (ก.ค. - ก.ย.)</option>
+              </select>
+            </div>
+          </DashboardFilterBar>
+        }
+      />
+
+      <DashboardTabs tabs={TABS} activeTab={activeTab} onChange={setActiveTab} />
 
       {/* Tab Content */}
       <div>{renderTab()}</div>
 
       {/* Footer */}
       <p className="mt-6 text-center text-xs text-gray-400">
-        ข้อมูล ณ วันที่ 17 มิถุนายน 2567 &nbsp;|&nbsp; ปีงบประมาณ {fiscalYear}
+        ข้อมูล ณ วันที่ {today} &nbsp;|&nbsp; ปีงบประมาณ {fiscalYear}
         {quarter ? ` | ${quarter}` : ""}
         &nbsp;|&nbsp; ระบบจัดการจัดซื้อจัดจ้าง HAI Dashboard
       </p>

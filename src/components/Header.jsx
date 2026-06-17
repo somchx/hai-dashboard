@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Bell, Search, ChevronDown, Globe, User, LogOut, Settings } from 'lucide-react'
+import { Bell, Search, ChevronDown, Globe, Menu, LogOut, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const notifications = [
@@ -9,7 +9,7 @@ const notifications = [
   { id: 4, text: 'ผู้ใช้ใหม่ลงทะเบียน: ดร.กมลา สุขใจ', time: '1 วันที่แล้ว', unread: false },
 ]
 
-export default function Header({ language, setLanguage, sidebarWidth = 240 }) {
+export default function Header({ language, setLanguage, sidebarWidth = 240, onMenuToggle }) {
   const [showNotif, setShowNotif] = useState(false)
   const [showUser, setShowUser] = useState(false)
   const navigate = useNavigate()
@@ -23,8 +23,24 @@ export default function Header({ language, setLanguage, sidebarWidth = 240 }) {
     navigate('/login')
   }
 
+  const handleLanguageToggle = () => {
+    const nextLanguage = language === 'th' ? 'en' : 'th'
+    localStorage.setItem('hai_language', nextLanguage)
+    setLanguage(nextLanguage)
+  }
+
   return (
-    <header className="h-14 bg-white border-b border-gray-200 flex items-center px-4 gap-3 fixed right-0 top-0 transition-all duration-300" style={{ zIndex: 30, left: sidebarWidth }}>
+    <header
+      className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center gap-3 border-b border-gray-200 bg-white px-4 transition-all duration-300 lg:left-[var(--sidebar-width)]"
+      style={{ '--sidebar-width': `${sidebarWidth}px` }}
+    >
+      <button
+        onClick={onMenuToggle}
+        className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 lg:hidden"
+      >
+        <Menu size={18} />
+      </button>
+
       {/* Search */}
       <div className="flex-1 max-w-md ml-1">
         <div className="relative">
@@ -40,7 +56,7 @@ export default function Header({ language, setLanguage, sidebarWidth = 240 }) {
       <div className="flex items-center gap-2 ml-auto">
         {/* Language Toggle */}
         <button
-          onClick={() => setLanguage(language === 'th' ? 'en' : 'th')}
+          onClick={handleLanguageToggle}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
         >
           <Globe size={14} />

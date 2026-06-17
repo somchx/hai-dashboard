@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Users, Plus, Search, Edit2, Trash2, Shield, Eye, BarChart3, X, Check } from 'lucide-react'
+import { Users, Plus, Search, Edit2, Trash2, Shield, Eye, BarChart3, X, Check, Lock, MapPin } from 'lucide-react'
 
 const initialUsers = [
   { id: 1, name: 'นายแพทย์ สมชาย ใจดี', email: 'somchai@hai.or.th', role: 'admin', lastLogin: '17/06/2567 08:32', status: 'ใช้งาน', dept: 'ผู้บริหาร' },
@@ -31,6 +31,12 @@ const permissions = [
   { name: 'ดาวน์โหลดรายงาน', admin: true, analyst: true, viewer: true },
   { name: 'สร้างรายงาน', admin: true, analyst: true, viewer: false },
   { name: 'ตั้งค่าการแจ้งเตือน', admin: true, analyst: true, viewer: false },
+]
+
+const rowLevelPolicies = [
+  { id: 1, scope: 'จังหวัด', target: 'เชียงใหม่, ลำพูน, ลำปาง', role: 'analyst', type: 'Row-level' },
+  { id: 2, scope: 'กลุ่มโรงพยาบาล', target: 'รพ.ศูนย์ภาคใต้', role: 'viewer', type: 'User-level' },
+  { id: 3, scope: 'Dataset', target: 'financial_data เฉพาะ read-only', role: 'viewer', type: 'Role-based' },
 ]
 
 export default function Admin() {
@@ -67,7 +73,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-gray-900">จัดการผู้ใช้งาน</h1>
@@ -83,7 +89,7 @@ export default function Admin() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {['admin', 'analyst', 'viewer'].map(role => {
           const { label, cls, icon: RoleIcon } = roleConfig[role]
           const count = users.filter(u => u.role === role).length
@@ -226,6 +232,48 @@ export default function Admin() {
               ))}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.1fr),minmax(0,0.9fr)]">
+        <div className="chart-card">
+          <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-800">
+            <Lock size={15} className="text-[#0D5C8F]" />
+            Data Access Control
+          </h3>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
+              <p className="text-xs font-semibold text-blue-700">User-level</p>
+              <p className="mt-2 text-xs leading-relaxed text-gray-600">กำหนดสิทธิ์รายบุคคล เช่น จำกัดให้เห็นเฉพาะโรงพยาบาลหรือจังหวัดที่รับผิดชอบ</p>
+            </div>
+            <div className="rounded-xl border border-purple-100 bg-purple-50 p-4">
+              <p className="text-xs font-semibold text-purple-700">Role-based</p>
+              <p className="mt-2 text-xs leading-relaxed text-gray-600">ควบคุมความสามารถตามบทบาท Admin, Analyst และ Viewer เพื่อแยกหน้าที่การใช้งาน</p>
+            </div>
+            <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+              <p className="text-xs font-semibold text-emerald-700">Row-level Security</p>
+              <p className="mt-2 text-xs leading-relaxed text-gray-600">กรองข้อมูลระดับ record เช่น จังหวัด, เครือข่ายโรงพยาบาล หรือ dataset ที่ได้รับอนุญาต</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="chart-card">
+          <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-gray-800">
+            <MapPin size={15} className="text-[#0D5C8F]" />
+            ตัวอย่าง Policy ที่ใช้งาน
+          </h3>
+          <div className="space-y-3">
+            {rowLevelPolicies.map(policy => (
+              <div key={policy.id} className="rounded-xl border border-gray-100 bg-gray-50 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="badge bg-slate-100 text-slate-700">{policy.type}</span>
+                  <span className="badge bg-blue-100 text-blue-700">{roleConfig[policy.role]?.label || policy.role}</span>
+                </div>
+                <p className="mt-2 text-xs font-medium text-gray-800">{policy.scope}</p>
+                <p className="mt-1 text-xs text-gray-500">{policy.target}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

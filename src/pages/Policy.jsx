@@ -8,6 +8,12 @@ import {
   Target, TrendingUp, FileText, CheckCircle, AlertCircle,
   Clock, Download, ChevronDown
 } from 'lucide-react';
+import {
+  DashboardFilterBar,
+  DashboardHeroCard,
+  DashboardPageHeader,
+  DashboardTabs,
+} from '../components/DashboardTheme';
 
 // ─── Color constants ───────────────────────────────────────────────────────────
 const PRIMARY = '#0D5C8F';
@@ -533,85 +539,73 @@ export default function Policy() {
   const [activeTab, setActiveTab] = useState(0);
   const [dateFrom,  setDateFrom]  = useState('2025-01');
   const [dateTo,    setDateTo]    = useState('2025-12');
+  const today = new Date().toLocaleDateString('th-TH', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Page header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: PRIMARY }}>
-          นโยบายและยุทธศาสตร์
-        </h1>
-        <p className="text-gray-500 text-sm mt-1">
-          ติดตาม KPI องค์กร แผนยุทธศาสตร์ และนโยบายสำคัญ
-        </p>
-      </div>
+    <div className="min-h-screen bg-gray-50 p-4">
+      <DashboardHeroCard
+        header={
+          <DashboardPageHeader
+            icon={Target}
+            title="นโยบายและยุทธศาสตร์"
+            subtitle={`ติดตาม KPI องค์กร แผนยุทธศาสตร์ และนโยบายสำคัญ • ข้อมูล ณ วันที่ ${today}`}
+          />
+        }
+        filter={
+          <DashboardFilterBar
+            label="ช่วงวันที่"
+            actions={
+              <>
+                {['ไตรมาสนี้', 'ครึ่งปีแรก', 'ทั้งปี'].map((label) => (
+                  <button
+                    key={label}
+                    type="button"
+                    className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-gray-600 transition-colors hover:bg-gray-50"
+                  >
+                    {label}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  className="rounded-lg bg-[#0EA5E9] px-4 py-1.5 text-xs font-medium text-white"
+                >
+                  กรอง
+                </button>
+              </>
+            }
+          >
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">จาก</label>
+              <input
+                type="month"
+                value={dateFrom}
+                onChange={e => setDateFrom(e.target.value)}
+                className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-300"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-gray-500">ถึง</label>
+              <input
+                type="month"
+                value={dateTo}
+                onChange={e => setDateTo(e.target.value)}
+                className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-300"
+              />
+            </div>
+          </DashboardFilterBar>
+        }
+      />
 
-      {/* Date range filter bar */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
-        <div className="flex flex-wrap items-center gap-4">
-          <span className="text-sm font-medium text-gray-600">ช่วงวันที่:</span>
-
-          <div className="flex items-center gap-2">
-            <label className="text-xs text-gray-500">จาก</label>
-            <input
-              type="month"
-              value={dateFrom}
-              onChange={e => setDateFrom(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-300"
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <label className="text-xs text-gray-500">ถึง</label>
-            <input
-              type="month"
-              value={dateTo}
-              onChange={e => setDateTo(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-300"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 ml-auto flex-wrap">
-            {['ไตรมาสนี้', 'ครึ่งปีแรก', 'ทั้งปี'].map(label => (
-              <button
-                key={label}
-                className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600 transition-colors"
-              >
-                {label}
-              </button>
-            ))}
-            <button
-              className="px-4 py-1.5 text-xs rounded-lg text-white font-medium transition-colors"
-              style={{ backgroundColor: PRIMARY }}
-            >
-              กรอง
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Sub-tabs */}
-      <div className="flex gap-1 mb-6 bg-white rounded-xl p-1 shadow-sm border border-gray-100 w-fit">
-        {TABS.map((tab, i) => {
-          const Icon   = tab.icon;
-          const active = activeTab === i;
-          return (
-            <button
-              key={i}
-              onClick={() => setActiveTab(i)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                active
-                  ? 'text-white shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
-              style={active ? { backgroundColor: PRIMARY } : {}}
-            >
-              <Icon size={15} />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
+      <DashboardTabs
+        tabs={TABS}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        getKey={(_, index) => index}
+      />
 
       {/* Tab content */}
       {activeTab === 0 && <TabKPI />}
