@@ -1,27 +1,31 @@
 import React, { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Header from './Header'
 
+const NO_PADDING_PATHS = [
+  '/financial', '/procurement', '/accreditation', '/policy',
+  '/report', '/data-prep', '/data-modeling',
+]
+
 export default function Layout({ language, setLanguage }) {
   const [collapsed, setCollapsed] = useState(false)
-
+  const { pathname } = useLocation()
   const sidebarWidth = collapsed ? 64 : 240
+  const noPadding = NO_PADDING_PATHS.includes(pathname)
 
   return (
     <div className="min-h-screen bg-[#F0F4F8]">
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
       <div
-        className="transition-all duration-300 min-h-screen"
+        className="transition-all duration-300 min-h-screen flex flex-col"
         style={{ marginLeft: sidebarWidth }}
       >
         <Header language={language} setLanguage={setLanguage} sidebarWidth={sidebarWidth} />
 
-        <main className="pt-14 min-h-screen">
-          <div className="p-6">
-            <Outlet />
-          </div>
+        <main className={`flex-1 pt-14 flex flex-col ${noPadding ? '' : 'p-6'}`}>
+          <Outlet />
         </main>
       </div>
     </div>

@@ -633,7 +633,7 @@ export default function SelfService() {
         </aside>
       </div>
 
-      {/* ─── Scheduled Reports ────────────────────────────────────────────────── */}
+      {/* ─── Scheduled Reports Table ──────────────────────────────────────────── */}
       <div className="border-t border-gray-100 bg-white px-6 py-4">
         <div className="flex items-center gap-2 mb-3">
           <Clock size={14} className="text-[#0D5C8F]" />
@@ -642,33 +642,50 @@ export default function SelfService() {
             {scheduledList.filter(s => s.status === "ใช้งาน").length} ใช้งาน
           </span>
         </div>
-        <div className="flex gap-3 overflow-x-auto pb-1">
-          {scheduledList.map(sr => (
-            <div key={sr.id} className="flex-shrink-0 w-64 flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-[#0D5C8F]/20 transition-colors">
-              <div className={`p-2 rounded-lg flex-shrink-0 ${sr.status === "ใช้งาน" ? "bg-green-100" : "bg-gray-200"}`}>
-                <Clock size={13} className={sr.status === "ใช้งาน" ? "text-green-600" : "text-gray-500"} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-gray-800 truncate">{sr.title}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5 truncate">
-                  {sr.frequency} · {sr.recipients?.[0] || "—"}
-                </p>
-              </div>
-              <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${sr.status === "ใช้งาน" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                  {sr.status}
-                </span>
-                <button onClick={() => setScheduledList(prev => prev.filter(x => x.id !== sr.id))}
-                  className="text-gray-300 hover:text-red-400 transition-colors">
-                  <X size={12} />
-                </button>
-              </div>
-            </div>
-          ))}
-          {scheduledList.length === 0 && (
-            <p className="text-xs text-gray-400 py-2">ยังไม่มีรายงานอัตโนมัติ — ตั้งค่าด้านบนแล้วกด "บันทึกการตั้งค่า"</p>
-          )}
-        </div>
+
+        {scheduledList.length === 0 ? (
+          <p className="text-xs text-gray-400 py-3">ยังไม่มีรายงานอัตโนมัติ — ตั้งค่าด้านบนแล้วกด "บันทึกการตั้งค่า"</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-gray-100">
+                  <th className="text-left py-2 px-3 text-gray-400 font-medium">ชื่อรายงาน</th>
+                  <th className="text-left py-2 px-3 text-gray-400 font-medium">ความถี่</th>
+                  <th className="text-left py-2 px-3 text-gray-400 font-medium">ครั้งต่อไป</th>
+                  <th className="text-left py-2 px-3 text-gray-400 font-medium">ผู้รับ</th>
+                  <th className="text-center py-2 px-3 text-gray-400 font-medium">รูปแบบ</th>
+                  <th className="text-center py-2 px-3 text-gray-400 font-medium">สถานะ</th>
+                  <th className="py-2 px-3" />
+                </tr>
+              </thead>
+              <tbody>
+                {scheduledList.map(sr => (
+                  <tr key={sr.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                    <td className="py-2.5 px-3 font-medium text-gray-800">{sr.title}</td>
+                    <td className="py-2.5 px-3 text-gray-500">{sr.frequency}</td>
+                    <td className="py-2.5 px-3 text-gray-500">{sr.nextRun}</td>
+                    <td className="py-2.5 px-3 text-gray-500">{sr.recipients?.join(", ") || "—"}</td>
+                    <td className="py-2.5 px-3 text-center">
+                      <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">{sr.format}</span>
+                    </td>
+                    <td className="py-2.5 px-3 text-center">
+                      <span className={`px-2 py-0.5 rounded-full font-medium ${sr.status === "ใช้งาน" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                        {sr.status}
+                      </span>
+                    </td>
+                    <td className="py-2.5 px-3 text-center">
+                      <button onClick={() => setScheduledList(prev => prev.filter(x => x.id !== sr.id))}
+                        className="text-gray-300 hover:text-red-400 transition-colors p-1">
+                        <X size={13} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
