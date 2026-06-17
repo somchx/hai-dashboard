@@ -45,11 +45,10 @@ const navItems = [
     ]
   },
   {
-    group: 'ระบบ',
+    group: 'ตั้งค่า',
     items: [
       { path: '/admin', icon: Users, label: 'ผู้ใช้งาน', labelEn: 'Users' },
       { path: '/alerts', icon: Bell, label: 'การแจ้งเตือน', labelEn: 'Alerts' },
-      { path: '/settings', icon: Settings, label: 'ตั้งค่า', labelEn: 'Settings' },
     ]
   }
 ]

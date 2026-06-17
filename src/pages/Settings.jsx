@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
-  Settings as SettingsIcon, User, Database, Globe, Bell, Lock,
-  CheckCircle, XCircle, RefreshCw, Save, Shield, Info
+  User, Database,
+  CheckCircle, XCircle, RefreshCw, Save,
 } from 'lucide-react'
 
 const dataSources = [
@@ -37,16 +37,13 @@ export default function Settings() {
 
   const tabs = [
     { id: 'profile', label: 'โปรไฟล์', icon: User },
-    { id: 'datasources', label: 'แหล่งข้อมูล', icon: Database },
-    { id: 'system', label: 'ข้อมูลระบบ', icon: Info },
-    { id: 'security', label: 'ความปลอดภัย', icon: Shield },
   ]
 
   return (
     <div className="space-y-6 max-w-4xl p-6">
       <div>
         <h1 className="text-xl font-bold text-gray-900">ตั้งค่า</h1>
-        <p className="text-sm text-gray-500 mt-0.5">Settings — จัดการการตั้งค่าบัญชีและระบบ</p>
+        <p className="text-sm text-gray-500 mt-0.5">Settings — จัดการการตั้งค่าบัญชี</p>
       </div>
 
       {/* Tabs */}
@@ -208,86 +205,6 @@ export default function Settings() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      )}
-
-      {/* System Info Tab */}
-      {activeTab === 'system' && (
-        <div className="chart-card">
-          <h3 className="text-sm font-semibold text-gray-800 mb-5 flex items-center gap-2">
-            <Info size={15} className="text-[#0D5C8F]" />
-            ข้อมูลระบบ
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {[
-              { label: 'เวอร์ชันระบบ', value: 'HAI Dashboard v2.4.1' },
-              { label: 'สภาพแวดล้อม', value: 'Production' },
-              { label: 'อัปเดตข้อมูลล่าสุด', value: '17/06/2567 08:00 น.' },
-              { label: 'รอบการอัปเดต', value: 'ทุก 1 ชั่วโมง' },
-              { label: 'ฐานข้อมูล', value: 'PostgreSQL 15.3' },
-              { label: 'เซิร์ฟเวอร์', value: 'AWS ap-southeast-1' },
-              { label: 'สถานะระบบ', value: '✅ ปกติทุกระบบ' },
-              { label: 'Uptime', value: '99.98% (30 วันล่าสุด)' },
-              { label: 'ผู้ดูแลระบบ', value: 'IT Operations HAI' },
-              { label: 'ติดต่อสนับสนุน', value: 'itsupport@hai.or.th' },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                <span className="text-xs text-gray-500">{item.label}</span>
-                <span className="text-xs font-semibold text-gray-800">{item.value}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
-            <p className="text-xs text-blue-700 font-medium">
-              ℹ️ ระบบ HAI Smart Dashboard พัฒนาโดย สถาบันรับรองคุณภาพสถานพยาบาล (องค์การมหาชน)
-              เพื่อการบริหารจัดการข้อมูลด้านสาธารณสุขของประเทศไทย
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Security Tab */}
-      {activeTab === 'security' && (
-        <div className="chart-card">
-          <h3 className="text-sm font-semibold text-gray-800 mb-5 flex items-center gap-2">
-            <Shield size={15} className="text-[#0D5C8F]" />
-            ความปลอดภัย
-          </h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">รหัสผ่านปัจจุบัน</label>
-              <input
-                type="password"
-                className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20"
-                placeholder="••••••••"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">รหัสผ่านใหม่</label>
-              <input
-                type="password"
-                className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20"
-                placeholder="••••••••"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">ยืนยันรหัสผ่านใหม่</label>
-              <input
-                type="password"
-                className="w-full text-sm border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0D5C8F]/20"
-                placeholder="••••••••"
-              />
-            </div>
-            <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
-              <p className="text-xs text-amber-700">
-                ⚠️ รหัสผ่านควรมีความยาวอย่างน้อย 8 ตัวอักษร ประกอบด้วยตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก และตัวเลข
-              </p>
-            </div>
-            <button className="btn-primary text-sm flex items-center gap-2">
-              <Lock size={14} />
-              เปลี่ยนรหัสผ่าน
-            </button>
           </div>
         </div>
       )}
