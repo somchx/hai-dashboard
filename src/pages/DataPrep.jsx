@@ -55,16 +55,6 @@ const DATA_SOURCES = [
   },
 ];
 
-const ACCESS_MODE_OPTIONS = ['Live / Direct Query', 'Import / Cached', 'Hybrid'];
-const LOAD_TYPE_OPTIONS = ['Incremental', 'Full Refresh', 'Append Only'];
-const REFRESH_CYCLE_OPTIONS = ['ทุก 15 นาที', 'ทุก 30 นาที', 'ทุก 1 ชั่วโมง', 'ทุก 6 ชั่วโมง', 'ทุกวัน'];
-
-const DEFAULT_SOURCE_CONFIGS = Object.fromEntries(
-  DATA_SOURCES.map((s) => [
-    s.id,
-    { accessMode: 'Live / Direct Query', loadType: 'Incremental', refreshCycle: 'ทุก 15 นาที' },
-  ])
-);
 
 const INITIAL_PIPELINES = [
   {
@@ -168,16 +158,11 @@ const DEFAULT_AGG_METRICS = [
 export default function DataPrep() {
   const [activeStep, setActiveStep] = useState('Source');
   const [activeTransformTab, setActiveTransformTab] = useState('join');
-  const [sourceConfigs, setSourceConfigs] = useState(DEFAULT_SOURCE_CONFIGS);
   const [pipelines, setPipelines] = useState(INITIAL_PIPELINES);
   const [editingPipeline, setEditingPipeline] = useState(null);
   const [modalStep, setModalStep] = useState('Source');
   const [modalTransformTab, setModalTransformTab] = useState('join');
   const [modalShowPreview, setModalShowPreview] = useState(false);
-
-  const updateSourceConfig = (id, key, value) => {
-    setSourceConfigs((prev) => ({ ...prev, [id]: { ...prev[id], [key]: value } }));
-  };
 
   const openEditModal = (pipeline) => {
     setEditingPipeline(pipeline);
@@ -280,7 +265,7 @@ export default function DataPrep() {
                   </span>
                 </div>
                 <h3 className="font-semibold text-gray-900 text-sm mb-2">{source.name}</h3>
-                <div className="space-y-1 mb-3">
+                <div className="space-y-1">
                   <p className="text-xs text-gray-500">
                     อัปเดตล่าสุด: <span className="text-gray-700">{source.lastSync}</span>
                   </p>
@@ -288,47 +273,6 @@ export default function DataPrep() {
                     จำนวนแถว:{' '}
                     <span className="text-blue-600 font-medium">{source.rows}</span>
                   </p>
-                </div>
-                <div className="border-t border-gray-100 pt-2 space-y-1.5">
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-xs text-gray-400 shrink-0">Access Mode</span>
-                    <select
-                      value={sourceConfigs[source.id].accessMode}
-                      onChange={(e) => updateSourceConfig(source.id, 'accessMode', e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-xs text-blue-700 bg-blue-50 border border-blue-200 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-400 cursor-pointer max-w-[130px]"
-                    >
-                      {ACCESS_MODE_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-xs text-gray-400 shrink-0">Load Type</span>
-                    <select
-                      value={sourceConfigs[source.id].loadType}
-                      onChange={(e) => updateSourceConfig(source.id, 'loadType', e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-xs text-purple-700 bg-purple-50 border border-purple-200 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-purple-400 cursor-pointer max-w-[130px]"
-                    >
-                      {LOAD_TYPE_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-xs text-gray-400 shrink-0">Refresh Cycle</span>
-                    <select
-                      value={sourceConfigs[source.id].refreshCycle}
-                      onChange={(e) => updateSourceConfig(source.id, 'refreshCycle', e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-xs text-green-700 bg-green-50 border border-green-200 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-green-400 cursor-pointer max-w-[130px]"
-                    >
-                      {REFRESH_CYCLE_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                  </div>
                 </div>
               </div>
             );
